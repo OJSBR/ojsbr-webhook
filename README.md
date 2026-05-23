@@ -5,7 +5,8 @@ Plugin genérico para **OJS 3.4** que dispara webhooks HTTP quando submissões s
 | Recurso | Link |
 | --- | --- |
 | Repositório | [github.com/OJSBR/ojsbr-webhook](https://github.com/OJSBR/ojsbr-webhook) |
-| Pacote (`.tar.gz`) | [GitHub Packages — ojsbr-webhook](https://github.com/orgs/OJSBR/packages/container/ojsbr-webhook) |
+| Releases (público) | [github.com/OJSBR/ojsbr-webhook/releases](https://github.com/OJSBR/ojsbr-webhook/releases) |
+| GitHub Packages | [GitHub Packages — ojsbr-webhook](https://github.com/orgs/OJSBR/packages/container/ojsbr-webhook) |
 | Organização | [github.com/OJSBR](https://github.com/OJSBR) |
 
 ## Branches
@@ -23,23 +24,44 @@ Plugin genérico para **OJS 3.4** que dispara webhooks HTTP quando submissões s
 
 ## Instalação
 
-### Opção 1 — Pacote empacotado (recomendado)
+### Opção 1 — Release (público, recomendado)
 
-Baixe a versão mais recente do [GitHub Packages](https://github.com/orgs/OJSBR/packages/container/ojsbr-webhook) ou use a [CLI ORAS](https://oras.land/docs/installation):
+Baixe o `.tar.gz` na página de [Releases](https://github.com/OJSBR/ojsbr-webhook/releases) (tag `3.4.latest` para OJS 3.4):
 
 ```bash
-# OJS 3.4 — última build publicada
-oras pull ghcr.io/ojsbr/ojsbr-webhook:3.4.latest
+curl -L -o ojsbr-webhook.tar.gz \
+  https://github.com/OJSBR/ojsbr-webhook/releases/download/3.4.latest/ojsbrWebhook-3.4.build.N.tar.gz
+```
 
-# ou uma build específica, ex.: 3.4.build.3
-# oras pull ghcr.io/ojsbr/ojsbr-webhook:3.4.build.3
+> Substitua `3.4.build.N` pela build desejada (veja os assets da release).
 
+```bash
 tar -xzf ojsbrWebhook-*.tar.gz -C /caminho/do/ojs/plugins/generic/
 ```
 
-Cada branch `stable-3_X_0` publica tags no formato `{X.Y}.build.{número}` e `{X.Y}.latest` (ex.: `3.4.latest`, `3.5.latest`).
+### Opção 2 — GitHub Packages (GHCR)
 
-> **Visibilidade do pacote:** o pacote é publicado na organização [OJSBR](https://github.com/orgs/OJSBR/packages). Se aparecer como privado, um admin da org pode torná-lo público em **Packages > ojsbr-webhook > Package settings > Change visibility**, ou definir em **Organization settings > Packages > Default visibility** como **Public**.
+Requer pacote com visibilidade **Public**. Use a [CLI ORAS](https://oras.land/docs/installation):
+
+```bash
+oras pull ghcr.io/ojsbr/ojsbr-webhook:3.4.latest
+tar -xzf ojsbrWebhook-*.tar.gz -C /caminho/do/ojs/plugins/generic/
+```
+
+Cada branch `stable-3_X_0` publica tags `{X.Y}.build.{número}` e `{X.Y}.latest`.
+
+#### Tornar o pacote GHCR público (admin da org, uma vez)
+
+1. Abra [Package settings — ojsbr-webhook](https://github.com/orgs/OJSBR/packages/container/ojsbr-webhook/settings)
+2. Role até **Danger Zone** → **Change visibility** → **Public**
+
+Ou via terminal (após `gh auth refresh -h github.com -s read:packages,write:packages`):
+
+```bash
+./scripts/set-package-public.sh
+```
+
+Para builds futuras já nascerem públicas: **Organization settings → Packages → Package creation → Public**.
 
 Substitua `/caminho/do/ojs` pelo diretório raiz da sua instalação OJS. O arquivo extraído deve ficar em:
 
@@ -47,7 +69,7 @@ Substitua `/caminho/do/ojs` pelo diretório raiz da sua instalação OJS. O arqu
 plugins/generic/ojsbrWebhook/
 ```
 
-### Opção 2 — Clone do repositório
+### Opção 3 — Clone do repositório
 
 Use a branch `stable-3_4_0` para instalações OJS 3.4:
 

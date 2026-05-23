@@ -6,7 +6,7 @@ on:
       - stable-3_*_*
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -79,29 +79,40 @@ jobs:
               "dist/${ARCHIVE}:application/vnd.ojsbr.webhook+tar.gz"
           done
 
-      - name: Link package to repository
+      - name: Make package public (admin token)
+        if: ${{ secrets.OJSBR_PACKAGES_ADMIN_TOKEN != '' }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
-        run: |
-          gh api \
-            --method PUT \
-            "/orgs/${{ github.repository_owner }}/packages/container/ojsbr-webhook/repository" \
-            -f repository_id="${{ github.event.repository.id }}"
-
-      - name: Make package public
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
+          GH_TOKEN: ${{ secrets.OJSBR_PACKAGES_ADMIN_TOKEN }}
         run: |
           gh api \
             --method PUT \
             "/orgs/${{ github.repository_owner }}/packages/container/ojsbr-webhook/visibility" \
-            -f visibility=public \
-            || gh api \
-              --method PUT \
-              "/user/packages/container/ojsbr-webhook/visibility" \
-              -f visibility=public
+            -f visibility=public
+
+      - name: Publish public GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.package_tag }}
+          name: OJSBR Webhook ${{ steps.version.outputs.package_tag }}
+          body: |
+            Plugin OJSBR Webhook para OJS ${{ steps.version.outputs.ojs_version }}.
+
+            Instalação:
+            ```bash
+            tar -xzf ${{ env.ARCHIVE }} -C /caminho/do/ojs/plugins/generic/
+            ```
+          files: dist/*.tar.gz
+          make_latest: true
+
+      - name: Update rolling release tag
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.package_latest }}
+          name: OJSBR Webhook ${{ steps.version.outputs.package_latest }}
+          body: |
+            Última build estável do OJSBR Webhook para OJS ${{ steps.version.outputs.ojs_version }}.
+          files: dist/*.tar.gz
+          overwrite_files: true
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
