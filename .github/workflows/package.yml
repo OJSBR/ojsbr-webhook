@@ -80,7 +80,7 @@ jobs:
           done
 
       - name: Make package public (admin token)
-        if: ${{ secrets.OJSBR_PACKAGES_ADMIN_TOKEN != '' }}
+        if: ${{ vars.ENABLE_PUBLIC_GHCR_PACKAGE == 'true' }}
         env:
           GH_TOKEN: ${{ secrets.OJSBR_PACKAGES_ADMIN_TOKEN }}
         run: |
