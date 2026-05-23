@@ -79,23 +79,29 @@ jobs:
               "dist/${ARCHIVE}:application/vnd.ojsbr.webhook+tar.gz"
           done
 
-      - name: Make package public
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh api \
-            --method PATCH \
-            "/orgs/${{ github.repository_owner }}/packages/container/ojsbr-webhook/visibility" \
-            -f visibility=public
-
       - name: Link package to repository
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
         run: |
           gh api \
-            --method POST \
-            "/orgs/${{ github.repository_owner }}/packages/container/ojsbr-webhook/repositories/${{ github.repository }}" \
-            || true
+            --method PUT \
+            "/orgs/${{ github.repository_owner }}/packages/container/ojsbr-webhook/repository" \
+            -f repository_id="${{ github.event.repository.id }}"
+
+      - name: Make package public
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+        run: |
+          gh api \
+            --method PUT \
+            "/orgs/${{ github.repository_owner }}/packages/container/ojsbr-webhook/visibility" \
+            -f visibility=public \
+            || gh api \
+              --method PUT \
+              "/user/packages/container/ojsbr-webhook/visibility" \
+              -f visibility=public
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

@@ -39,6 +39,8 @@ tar -xzf ojsbrWebhook-*.tar.gz -C /caminho/do/ojs/plugins/generic/
 
 Cada branch `stable-3_X_0` publica tags no formato `{X.Y}.build.{número}` e `{X.Y}.latest` (ex.: `3.4.latest`, `3.5.latest`).
 
+> **Visibilidade do pacote:** o pacote é publicado na organização [OJSBR](https://github.com/orgs/OJSBR/packages). Se aparecer como privado, um admin da org pode torná-lo público em **Packages > ojsbr-webhook > Package settings > Change visibility**, ou definir em **Organization settings > Packages > Default visibility** como **Public**.
+
 Substitua `/caminho/do/ojs` pelo diretório raiz da sua instalação OJS. O arquivo extraído deve ficar em:
 
 ```text
