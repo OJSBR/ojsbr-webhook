@@ -1,0 +1,8 @@
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Servidor de testes local
+test-server/node_modules/

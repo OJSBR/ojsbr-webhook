@@ -1,0 +1,50 @@
+msgid "plugins.generic.ojsbrWebhook.displayName"
+msgstr "OJSBR Webhook"
+
+msgid "plugins.generic.ojsbrWebhook.description"
+msgstr "Envia webhooks quando uma submissão é criada ou um artigo é publicado de fato."
+
+msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
+msgstr "URL do Webhook"
+
+msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
+msgstr "Informe a URL que receberá os eventos de submissão e publicação."
+
+msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
+msgstr "Segredo do Webhook"
+
+msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
+msgstr "Segredo opcional usado para assinar o payload com HMAC SHA-256."
+
+msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
+msgstr "Cadastre um ou mais endpoints e selecione quais eventos cada endpoint deve receber. Artigos agendados em edições futuras só disparam o webhook quando a edição for publicada. Linhas sem URL ou sem evento marcado serão ignoradas."
+
+msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
+msgstr "Nova submissão"
+
+msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
+msgstr "Artigo publicado"
+
+msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
+msgstr "Adicionar endpoint"
+
+msgid "plugins.generic.ojsbrWebhook.settings.saved"
+msgstr "Configurações salvas."
+
+msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
+msgstr "Exemplo de payload enviado"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
+msgstr "Testar"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testing"
+msgstr "Testando..."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testSent"
+msgstr "Teste enviado."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
+msgstr "Falha no teste."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
+msgstr "Informe a URL antes de testar."
