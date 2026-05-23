@@ -13,7 +13,8 @@ Plugin genérico para **OJS 3.4** que dispara webhooks HTTP quando submissões s
 | Branch | Uso |
 | --- | --- |
 | `master` | Desenvolvimento ativo |
-| `stable-3_4_0` | Versão compatível com OJS 3.4.x — commits nesta branch geram automaticamente um pacote `.tar.gz` no [GitHub Packages](https://github.com/orgs/OJSBR/packages/container/ojsbr-webhook) |
+| `stable-3_4_0` | Compatível com OJS 3.4.x — gera pacote `3.4.build.*` no [GitHub Packages](https://github.com/orgs/OJSBR/packages/container/ojsbr-webhook) |
+| `stable-3_5_0` | (futuro) Compatível com OJS 3.5.x — gera pacote `3.5.build.*` |
 
 ## Eventos
 
@@ -27,9 +28,16 @@ Plugin genérico para **OJS 3.4** que dispara webhooks HTTP quando submissões s
 Baixe a versão mais recente do [GitHub Packages](https://github.com/orgs/OJSBR/packages/container/ojsbr-webhook) ou use a [CLI ORAS](https://oras.land/docs/installation):
 
 ```bash
-oras pull ghcr.io/ojsbr/ojsbr-webhook:latest
+# OJS 3.4 — última build publicada
+oras pull ghcr.io/ojsbr/ojsbr-webhook:3.4.latest
+
+# ou uma build específica, ex.: 3.4.build.3
+# oras pull ghcr.io/ojsbr/ojsbr-webhook:3.4.build.3
+
 tar -xzf ojsbrWebhook-*.tar.gz -C /caminho/do/ojs/plugins/generic/
 ```
+
+Cada branch `stable-3_X_0` publica tags no formato `{X.Y}.build.{número}` e `{X.Y}.latest` (ex.: `3.4.latest`, `3.5.latest`).
 
 Substitua `/caminho/do/ojs` pelo diretório raiz da sua instalação OJS. O arquivo extraído deve ficar em:
 

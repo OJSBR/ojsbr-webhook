@@ -3,7 +3,7 @@ name: Package plugin
 on:
   push:
     branches:
-      - stable-3_4_0
+      - stable-3_*_*
 
 permissions:
   contents: read
@@ -16,17 +16,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Read plugin version
+      - name: Read OJS line and plugin metadata
         id: version
         run: |
-          RELEASE=$(grep -oP '(?<=<release>)[^<]+' version.xml | head -1)
+          BRANCH="${GITHUB_REF_NAME}"
+          if [[ ! "$BRANCH" =~ ^stable-([0-9]+)_([0-9]+)_[0-9]+$ ]]; then
+            echo "Branch ${BRANCH} is not a supported stable branch." >&2
+            exit 1
+          fi
+
+          OJS_VERSION="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
           APPLICATION=$(grep -oP '(?<=<application>)[^<]+' version.xml | head -1)
-          SHORT_SHA="${GITHUB_SHA::7}"
-          PACKAGE_TAG="${RELEASE}-build.${GITHUB_RUN_NUMBER}"
-          echo "release=${RELEASE}" >> "$GITHUB_OUTPUT"
+          PACKAGE_TAG="${OJS_VERSION}.build.${GITHUB_RUN_NUMBER}"
+          PACKAGE_LATEST="${OJS_VERSION}.latest"
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+
+          echo "ojs_version=${OJS_VERSION}" >> "$GITHUB_OUTPUT"
           echo "application=${APPLICATION}" >> "$GITHUB_OUTPUT"
           echo "package_tag=${PACKAGE_TAG}" >> "$GITHUB_OUTPUT"
-          echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          echo "package_latest=${PACKAGE_LATEST}" >> "$GITHUB_OUTPUT"
+          echo "owner_lc=${OWNER_LC}" >> "$GITHUB_OUTPUT"
 
       - name: Build tarball
         run: |
@@ -55,23 +64,38 @@ jobs:
 
       - name: Publish package to GitHub Packages
         env:
-          IMAGE: ghcr.io/ojsbr/ojsbr-webhook
+          IMAGE: ghcr.io/${{ steps.version.outputs.owner_lc }}/ojsbr-webhook
+          REPO_URL: https://github.com/${{ github.repository }}
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io \
-            --username "${{ github.actor }}" \
+            --username "${{ github.repository_owner }}" \
             --password-stdin
 
-          oras push "${IMAGE}:${{ steps.version.outputs.package_tag }}" \
-            --artifact-type application/vnd.ojsbr.webhook+tar.gz \
-            "dist/${ARCHIVE}:application/vnd.ojsbr.webhook+tar.gz"
+          for TAG in "${{ steps.version.outputs.package_tag }}" "${{ steps.version.outputs.package_latest }}"; do
+            oras push "${IMAGE}:${TAG}" \
+              --artifact-type application/vnd.ojsbr.webhook+tar.gz \
+              --annotation "org.opencontainers.image.source=${REPO_URL}" \
+              --annotation "org.opencontainers.image.version=${TAG}" \
+              "dist/${ARCHIVE}:application/vnd.ojsbr.webhook+tar.gz"
+          done
 
-          oras push "${IMAGE}:${{ steps.version.outputs.release }}" \
-            --artifact-type application/vnd.ojsbr.webhook+tar.gz \
-            "dist/${ARCHIVE}:application/vnd.ojsbr.webhook+tar.gz"
+      - name: Make package public
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api \
+            --method PATCH \
+            "/orgs/${{ github.repository_owner }}/packages/container/ojsbr-webhook/visibility" \
+            -f visibility=public
 
-          oras push "${IMAGE}:latest" \
-            --artifact-type application/vnd.ojsbr.webhook+tar.gz \
-            "dist/${ARCHIVE}:application/vnd.ojsbr.webhook+tar.gz"
+      - name: Link package to repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api \
+            --method POST \
+            "/orgs/${{ github.repository_owner }}/packages/container/ojsbr-webhook/repositories/${{ github.repository }}" \
+            || true
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
