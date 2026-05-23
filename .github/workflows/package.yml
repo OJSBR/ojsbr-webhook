@@ -54,12 +54,12 @@ jobs:
           version: 1.2.2
 
       - name: Publish package to GitHub Packages
+        env:
+          IMAGE: ghcr.io/ojsbr/ojsbr-webhook
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io \
             --username "${{ github.actor }}" \
             --password-stdin
-
-          IMAGE="ghcr.io/${{ github.repository_owner }}/ojsbr-webhook"
 
           oras push "${IMAGE}:${{ steps.version.outputs.package_tag }}" \
             --artifact-type application/vnd.ojsbr.webhook+tar.gz \
