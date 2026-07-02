@@ -1,5 +1,17 @@
 # OJSBR Webhook
 
+[![OJS](https://img.shields.io/badge/OJS-3.4-brightgreen)](https://pkp.sfu.ca/ojs/)
+[![Version](https://img.shields.io/badge/version-1.0.0.0-blue)](version.xml)
+[![License](https://img.shields.io/badge/license-GPL--3.0-lightgrey)](LICENSE)
+
+A generic **Open Journal Systems (OJS)** plugin that fires HTTP webhooks when submissions are
+created and when articles are actually published. Maintained by **[OJSBR](https://ojsbr.com.br)**.
+The full documentation below is in Portuguese.
+
+**⬇️ Install package:** [OJS 3.4](https://github.com/OJSBR/ojsbr-webhook/releases/tag/3.4.latest) — or browse all [Releases](../../releases).
+
+---
+
 Plugin genérico para **OJS 3.4** que dispara webhooks HTTP quando submissões são criadas e artigos são publicados de fato.
 
 | Recurso | Link |
@@ -161,6 +173,11 @@ Acesse `http://localhost:3333` e configure o endpoint no plugin como:
 ```text
 http://host.docker.internal:3333/webhook/ojs
 ```
+
+## Créditos e autoria
+
+- **Desenvolvido e mantido pela** [OJSBR](https://ojsbr.com.br) — plugin autoral.
+- Distribuído sob a **GNU GPL v3**.
 
 ## Licença
 
