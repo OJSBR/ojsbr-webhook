@@ -1,0 +1,63 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: OJSBR <eder@sotto.com.br>\n"
+"Language-Team: OJSBR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-16T00:00:00+00:00\n"
+"PO-Revision-Date: 2026-07-16T00:00:00+00:00\n"
+"Language: it\n"
+
+msgid "plugins.generic.ojsbrWebhook.displayName"
+msgstr "OJSBR Webhook"
+
+msgid "plugins.generic.ojsbrWebhook.description"
+msgstr "Invia webhook quando viene creata una proposta o quando un articolo viene effettivamente pubblicato."
+
+msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
+msgstr "URL del webhook"
+
+msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
+msgstr "Inserisci l'URL che riceverà gli eventi di proposta e pubblicazione."
+
+msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
+msgstr "Segreto del webhook"
+
+msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
+msgstr "Segreto facoltativo usato per firmare il payload con HMAC SHA-256."
+
+msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
+msgstr "Registra uno o più endpoint e seleziona quali eventi ciascun endpoint deve ricevere. Gli articoli programmati in fascicoli futuri attivano il webhook solo quando il fascicolo viene pubblicato. Le righe senza URL o senza alcun evento selezionato verranno ignorate."
+
+msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
+msgstr "Nuova proposta"
+
+msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
+msgstr "Articolo pubblicato"
+
+msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
+msgstr "Aggiungi endpoint"
+
+msgid "plugins.generic.ojsbrWebhook.settings.saved"
+msgstr "Impostazioni salvate."
+
+msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
+msgstr "Esempio di payload inviato"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
+msgstr "Prova"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testing"
+msgstr "Prova in corso..."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testSent"
+msgstr "Prova inviata."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
+msgstr "Prova non riuscita."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
+msgstr "Inserisci l'URL prima di provare."
