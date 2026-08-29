@@ -5,56 +5,73 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Last-Translator: OJSBR\n"
 "Language-Team: OJSBR\n"
-"Language: pt_BR\n"
+"Language: fi\n"
 
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.displayName"
-msgstr "OJSBR Webhook"
+msgstr "OJSBR-webhook"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.description"
-msgstr "Envia webhooks quando uma submissão é criada ou um artigo é publicado de fato."
+msgstr "Lähettää webhookeja, kun käsikirjoitus luodaan tai artikkeli tosiasiassa julkaistaan."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
-msgstr "URL do Webhook"
+msgstr "Webhookin URL-osoite"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
-msgstr "Informe a URL que receberá os eventos de submissão e publicação."
+msgstr "Anna URL-osoite, joka vastaanottaa käsikirjoitus- ja julkaisutapahtumat."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
-msgstr "Segredo do Webhook"
+msgstr "Webhookin salaisuus"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
-msgstr "Segredo opcional usado para assinar o payload com HMAC SHA-256."
+msgstr "Valinnainen salaisuus hyötykuorman allekirjoittamiseen HMAC SHA-256:lla."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
-msgstr "Cadastre um ou mais endpoints e selecione quais eventos cada endpoint deve receber. Artigos agendados em edições futuras só disparam o webhook quando a edição for publicada. Linhas sem URL ou sem evento marcado serão ignoradas."
+msgstr "Rekisteröi yksi tai useampi päätepiste ja valitse, mitkä tapahtumat kukin vastaanottaa."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
-msgstr "Nova submissão"
+msgstr "Uusi käsikirjoitus"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
-msgstr "Artigo publicado"
+msgstr "Artikkeli julkaistu"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
-msgstr "Adicionar endpoint"
+msgstr "Lisää päätepiste"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Configurações salvas."
+msgstr "Asetukset tallennettiin."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
-msgstr "Exemplo de payload enviado"
+msgstr "Esimerkki lähetetystä hyötykuormasta"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
-msgstr "Testar"
+msgstr "Testaa"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testing"
-msgstr "Testando..."
+msgstr "Testataan…"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testSent"
-msgstr "Teste enviado."
+msgstr "Testi lähetetty."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
-msgstr "Falha no teste."
+msgstr "Testi epäonnistui."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
-msgstr "Informe a URL antes de testar."
+msgstr "Anna URL-osoite ennen testausta."

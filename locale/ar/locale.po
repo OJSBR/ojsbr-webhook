@@ -5,56 +5,73 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Last-Translator: OJSBR\n"
 "Language-Team: OJSBR\n"
-"Language: pt_BR\n"
+"Language: ar\n"
 
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.displayName"
 msgstr "OJSBR Webhook"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.description"
-msgstr "Envia webhooks quando uma submissão é criada ou um artigo é publicado de fato."
+msgstr "يرسل ويب هوك عند إنشاء طلب نشر أو عند نشر مقال فعلياً."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
-msgstr "URL do Webhook"
+msgstr "عنوان Webhook"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
-msgstr "Informe a URL que receberá os eventos de submissão e publicação."
+msgstr "أدخل العنوان الذي سيستقبل أحداث الطلبات والنشر."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
-msgstr "Segredo do Webhook"
+msgstr "سرّ Webhook"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
-msgstr "Segredo opcional usado para assinar o payload com HMAC SHA-256."
+msgstr "سرّ اختياري يُستخدم لتوقيع الحمولة بخوارزمية HMAC SHA-256."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
-msgstr "Cadastre um ou mais endpoints e selecione quais eventos cada endpoint deve receber. Artigos agendados em edições futuras só disparam o webhook quando a edição for publicada. Linhas sem URL ou sem evento marcado serão ignoradas."
+msgstr "سجّل نقطة نهاية واحدة أو أكثر، وحدّد الأحداث التي تستقبلها كل نقطة."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
-msgstr "Nova submissão"
+msgstr "طلب نشر جديد"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
-msgstr "Artigo publicado"
+msgstr "نُشر المقال"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
-msgstr "Adicionar endpoint"
+msgstr "إضافة نقطة نهاية"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Configurações salvas."
+msgstr "حُفظت الإعدادات."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
-msgstr "Exemplo de payload enviado"
+msgstr "نموذج الحمولة المُرسَلة"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
-msgstr "Testar"
+msgstr "اختبار"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testing"
-msgstr "Testando..."
+msgstr "جارٍ الاختبار…"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testSent"
-msgstr "Teste enviado."
+msgstr "أُرسل الاختبار."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
-msgstr "Falha no teste."
+msgstr "فشل الاختبار."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
-msgstr "Informe a URL antes de testar."
+msgstr "أدخل العنوان قبل الاختبار."

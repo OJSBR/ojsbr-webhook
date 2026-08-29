@@ -1,0 +1,77 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: OJSBR\n"
+"Language-Team: OJSBR\n"
+"Language: hy\n"
+
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.displayName"
+msgstr "OJSBR Webhook"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.description"
+msgstr "Ուղարկում է webhook-ներ, երբ ներկայացում է ստեղծվում կամ հոդվածն իրականում հրապարակվում է։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
+msgstr "Webhook-ի URL"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
+msgstr "Մուտքագրեք URL-ը, որը կստանա ներկայացման և հրապարակման իրադարձությունները։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
+msgstr "Webhook-ի գաղտնի բանալի"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
+msgstr "Ընտրովի գաղտնի բանալի՝ տվյալները HMAC SHA-256-ով ստորագրելու համար։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
+msgstr "Գրանցեք մեկ կամ մի քանի վերջնակետ և ընտրեք, թե յուրաքանչյուրը որ իրադարձությունները ստանա։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
+msgstr "Նոր ներկայացում"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
+msgstr "Հոդվածը հրապարակվեց"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
+msgstr "Ավելացնել վերջնակետ"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.saved"
+msgstr "Կարգավորումները պահպանվեցին։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
+msgstr "Ուղարկվող տվյալների օրինակ"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
+msgstr "Փորձարկում"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testing"
+msgstr "Փորձարկվում է…"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testSent"
+msgstr "Փորձարկումն ուղարկվեց։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
+msgstr "Փորձարկումը ձախողվեց։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
+msgstr "Մուտքագրեք URL-ը փորձարկումից առաջ։"

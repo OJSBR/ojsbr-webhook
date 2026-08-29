@@ -5,56 +5,73 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Last-Translator: OJSBR\n"
 "Language-Team: OJSBR\n"
-"Language: pt_BR\n"
+"Language: ja\n"
 
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.displayName"
 msgstr "OJSBR Webhook"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.description"
-msgstr "Envia webhooks quando uma submissão é criada ou um artigo é publicado de fato."
+msgstr "投稿が作成されたとき、または論文が実際に公開されたときに Webhook を送信します。"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
-msgstr "URL do Webhook"
+msgstr "Webhook の URL"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
-msgstr "Informe a URL que receberá os eventos de submissão e publicação."
+msgstr "投稿および公開のイベントを受け取る URL を入力してください。"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
-msgstr "Segredo do Webhook"
+msgstr "Webhook のシークレット"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
-msgstr "Segredo opcional usado para assinar o payload com HMAC SHA-256."
+msgstr "ペイロードを HMAC SHA-256 で署名するための任意のシークレット。"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
-msgstr "Cadastre um ou mais endpoints e selecione quais eventos cada endpoint deve receber. Artigos agendados em edições futuras só disparam o webhook quando a edição for publicada. Linhas sem URL ou sem evento marcado serão ignoradas."
+msgstr "エンドポイントを 1 つ以上登録し、それぞれが受け取るイベントを選びます。"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
-msgstr "Nova submissão"
+msgstr "新規投稿"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
-msgstr "Artigo publicado"
+msgstr "論文が公開されました"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
-msgstr "Adicionar endpoint"
+msgstr "エンドポイントを追加"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Configurações salvas."
+msgstr "設定を保存しました。"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
-msgstr "Exemplo de payload enviado"
+msgstr "送信されるペイロードの例"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
-msgstr "Testar"
+msgstr "テスト"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testing"
-msgstr "Testando..."
+msgstr "テスト中…"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testSent"
-msgstr "Teste enviado."
+msgstr "テストを送信しました。"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
-msgstr "Falha no teste."
+msgstr "テストに失敗しました。"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
-msgstr "Informe a URL antes de testar."
+msgstr "テストの前に URL を入力してください。"

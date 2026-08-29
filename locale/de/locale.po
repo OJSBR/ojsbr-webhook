@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2026-07-16T00:00:00+00:00\n"
 "Language: de\n"
 
+
 msgid "plugins.generic.ojsbrWebhook.displayName"
 msgstr "OJSBR Webhook"
 

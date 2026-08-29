@@ -5,56 +5,73 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Last-Translator: OJSBR\n"
 "Language-Team: OJSBR\n"
-"Language: pt_BR\n"
+"Language: sr_Latn\n"
 
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.displayName"
 msgstr "OJSBR Webhook"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.description"
-msgstr "Envia webhooks quando uma submissão é criada ou um artigo é publicado de fato."
+msgstr "Šalje webhook-ove kada se kreira prilog ili kada se članak zaista objavi."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
-msgstr "URL do Webhook"
+msgstr "URL webhook-a"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
-msgstr "Informe a URL que receberá os eventos de submissão e publicação."
+msgstr "Unesite URL koji će primati događaje priloga i objave."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
-msgstr "Segredo do Webhook"
+msgstr "Tajna webhook-a"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
-msgstr "Segredo opcional usado para assinar o payload com HMAC SHA-256."
+msgstr "Opciona tajna za potpisivanje sadržaja pomoću HMAC SHA-256."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
-msgstr "Cadastre um ou mais endpoints e selecione quais eventos cada endpoint deve receber. Artigos agendados em edições futuras só disparam o webhook quando a edição for publicada. Linhas sem URL ou sem evento marcado serão ignoradas."
+msgstr "Registrujte jednu ili više krajnjih tačaka i izaberite koje događaje svaka prima."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
-msgstr "Nova submissão"
+msgstr "Novi prilog"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
-msgstr "Artigo publicado"
+msgstr "Članak objavljen"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
-msgstr "Adicionar endpoint"
+msgstr "Dodaj krajnju tačku"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Configurações salvas."
+msgstr "Podešavanja su sačuvana."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
-msgstr "Exemplo de payload enviado"
+msgstr "Primer poslatog sadržaja"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
-msgstr "Testar"
+msgstr "Test"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testing"
-msgstr "Testando..."
+msgstr "Testiranje…"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testSent"
-msgstr "Teste enviado."
+msgstr "Test je poslat."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
-msgstr "Falha no teste."
+msgstr "Test nije uspeo."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
-msgstr "Informe a URL antes de testar."
+msgstr "Unesite URL pre testiranja."

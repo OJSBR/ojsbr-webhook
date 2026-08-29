@@ -5,56 +5,56 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Last-Translator: OJSBR\n"
 "Language-Team: OJSBR\n"
-"Language: pt_BR\n"
+"Language: gl\n"
 
 
 msgid "plugins.generic.ojsbrWebhook.displayName"
 msgstr "OJSBR Webhook"
 
 msgid "plugins.generic.ojsbrWebhook.description"
-msgstr "Envia webhooks quando uma submissão é criada ou um artigo é publicado de fato."
+msgstr "Envía webhooks cando se crea un envío ou cando un artigo se publica realmente."
 
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
-msgstr "URL do Webhook"
+msgstr "URL do webhook"
 
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
-msgstr "Informe a URL que receberá os eventos de submissão e publicação."
+msgstr "Introduza o URL que recibirá os eventos de envío e publicación."
 
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
-msgstr "Segredo do Webhook"
+msgstr "Segredo do webhook"
 
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
-msgstr "Segredo opcional usado para assinar o payload com HMAC SHA-256."
+msgstr "Segredo opcional para asinar a carga con HMAC SHA-256."
 
 msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
-msgstr "Cadastre um ou mais endpoints e selecione quais eventos cada endpoint deve receber. Artigos agendados em edições futuras só disparam o webhook quando a edição for publicada. Linhas sem URL ou sem evento marcado serão ignoradas."
+msgstr "Rexistre un ou máis puntos finais e seleccione que eventos debe recibir cada un."
 
 msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
-msgstr "Nova submissão"
+msgstr "Novo envío"
 
 msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
 msgstr "Artigo publicado"
 
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
-msgstr "Adicionar endpoint"
+msgstr "Engadir punto final"
 
 msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Configurações salvas."
+msgstr "Gardouse a configuración."
 
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
-msgstr "Exemplo de payload enviado"
+msgstr "Exemplo de carga enviada"
 
 msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
-msgstr "Testar"
+msgstr "Proba"
 
 msgid "plugins.generic.ojsbrWebhook.settings.testing"
-msgstr "Testando..."
+msgstr "Probando…"
 
 msgid "plugins.generic.ojsbrWebhook.settings.testSent"
-msgstr "Teste enviado."
+msgstr "Enviouse a proba."
 
 msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
-msgstr "Falha no teste."
+msgstr "A proba fallou."
 
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
-msgstr "Informe a URL antes de testar."
+msgstr "Introduza o URL antes de probar."

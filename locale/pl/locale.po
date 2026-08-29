@@ -5,56 +5,73 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Last-Translator: OJSBR\n"
 "Language-Team: OJSBR\n"
-"Language: pt_BR\n"
+"Language: pl\n"
 
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.displayName"
-msgstr "OJSBR Webhook"
+msgstr "Webhook OJSBR"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.description"
-msgstr "Envia webhooks quando uma submissão é criada ou um artigo é publicado de fato."
+msgstr "Wysyła webhooki, gdy powstaje zgłoszenie lub gdy artykuł zostaje faktycznie opublikowany."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
-msgstr "URL do Webhook"
+msgstr "Adres URL webhooka"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
-msgstr "Informe a URL que receberá os eventos de submissão e publicação."
+msgstr "Podaj adres URL, który będzie odbierać zdarzenia zgłoszeń i publikacji."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
-msgstr "Segredo do Webhook"
+msgstr "Sekret webhooka"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
-msgstr "Segredo opcional usado para assinar o payload com HMAC SHA-256."
+msgstr "Opcjonalny sekret do podpisywania ładunku algorytmem HMAC SHA-256."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
-msgstr "Cadastre um ou mais endpoints e selecione quais eventos cada endpoint deve receber. Artigos agendados em edições futuras só disparam o webhook quando a edição for publicada. Linhas sem URL ou sem evento marcado serão ignoradas."
+msgstr "Zarejestruj jeden lub więcej punktów końcowych i wybierz, jakie zdarzenia ma odbierać każdy z nich."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
-msgstr "Nova submissão"
+msgstr "Nowe zgłoszenie"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
-msgstr "Artigo publicado"
+msgstr "Artykuł opublikowany"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
-msgstr "Adicionar endpoint"
+msgstr "Dodaj punkt końcowy"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Configurações salvas."
+msgstr "Ustawienia zapisane."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
-msgstr "Exemplo de payload enviado"
+msgstr "Przykład wysyłanego ładunku"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
-msgstr "Testar"
+msgstr "Test"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testing"
-msgstr "Testando..."
+msgstr "Testowanie…"
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testSent"
-msgstr "Teste enviado."
+msgstr "Test wysłany."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
-msgstr "Falha no teste."
+msgstr "Test się nie powiódł."
 
+#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
-msgstr "Informe a URL antes de testar."
+msgstr "Podaj adres URL przed testem."

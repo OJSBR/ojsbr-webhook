@@ -1,7 +1,7 @@
 # OJSBR Webhook
 
 [![OJS](https://img.shields.io/badge/OJS-3.4-brightgreen)](https://pkp.sfu.ca/ojs/)
-[![Version](https://img.shields.io/badge/version-1.0.0.0-blue)](version.xml)
+[![Version](https://img.shields.io/badge/version-1.0.0.3-blue)](version.xml)
 [![License](https://img.shields.io/badge/license-GPL--3.0-lightgrey)](LICENSE)
 
 A generic **Open Journal Systems (OJS)** plugin that fires HTTP webhooks when submissions are
@@ -42,7 +42,7 @@ Baixe o `.tar.gz` na página de [Releases](https://github.com/OJSBR/ojsbr-webhoo
 
 ```bash
 curl -L -o ojsbr-webhook.tar.gz \
-  https://github.com/OJSBR/ojsbr-webhook/releases/download/3.4.latest/ojsbrWebhook-3.4.build.7.tar.gz
+  https://github.com/OJSBR/ojsbr-webhook/releases/download/1.0.0.3/ojsbrWebhook-1.0.0.3.tar.gz
 ```
 
 > Confira o nome exato do asset em [Releases](https://github.com/OJSBR/ojsbr-webhook/releases/tag/3.4.latest).
