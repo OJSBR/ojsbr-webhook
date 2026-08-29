@@ -5,56 +5,56 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Last-Translator: OJSBR\n"
 "Language-Team: OJSBR\n"
-"Language: nb_NO\n"
+"Language: sr@latin\n"
 
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.displayName"
-msgstr "OJSBR-webhook"
+msgstr "OJSBR Webhook"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.description"
-msgstr "Sender webhooks når en innsending opprettes, eller når en artikkel faktisk publiseres."
+msgstr "Šalje webhook-ove kada se kreira prilog ili kada se članak zaista objavi."
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
-msgstr "Webhook-URL"
+msgstr "URL webhook-a"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
-msgstr "Skriv inn URL-en som skal motta innsendings- og publiseringshendelser."
+msgstr "Unesite URL koji će primati događaje priloga i objave."
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
-msgstr "Webhook-hemmelighet"
+msgstr "Tajna webhook-a"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
-msgstr "Valgfri hemmelighet for å signere nyttelasten med HMAC SHA-256."
+msgstr "Opciona tajna za potpisivanje sadržaja pomoću HMAC SHA-256."
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
-msgstr "Registrer ett eller flere endepunkter, og velg hvilke hendelser hvert av dem skal motta."
+msgstr "Registrujte jednu ili više krajnjih tačaka i izaberite koje događaje svaka prima."
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
-msgstr "Ny innsending"
+msgstr "Novi prilog"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
-msgstr "Artikkel publisert"
+msgstr "Članak objavljen"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
-msgstr "Legg til endepunkt"
+msgstr "Dodaj krajnju tačku"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Innstillingene er lagret."
+msgstr "Podešavanja su sačuvana."
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
-msgstr "Eksempel på sendt nyttelast"
+msgstr "Primer poslatog sadržaja"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
@@ -62,16 +62,16 @@ msgstr "Test"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testing"
-msgstr "Tester …"
+msgstr "Testiranje…"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testSent"
-msgstr "Testen er sendt."
+msgstr "Test je poslat."
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
-msgstr "Testen mislyktes."
+msgstr "Test nije uspeo."
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
-msgstr "Skriv inn URL-en før du tester."
+msgstr "Unesite URL pre testiranja."

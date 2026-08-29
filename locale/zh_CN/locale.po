@@ -5,7 +5,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Last-Translator: OJSBR\n"
 "Language-Team: OJSBR\n"
-"Language: sr_Latn\n"
+"Language: zh_CN\n"
 
 
 #, fuzzy
@@ -14,64 +14,64 @@ msgstr "OJSBR Webhook"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.description"
-msgstr "Šalje webhook-ove kada se kreira prilog ili kada se članak zaista objavi."
+msgstr "当创建投稿或文章真正发表时发送 webhook。"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl"
-msgstr "URL webhook-a"
+msgstr "Webhook 网址"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookUrl.description"
-msgstr "Unesite URL koji će primati događaje priloga i objave."
+msgstr "请输入将接收投稿和发表事件的网址。"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret"
-msgstr "Tajna webhook-a"
+msgstr "Webhook 密钥"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.webhookSecret.description"
-msgstr "Opciona tajna za potpisivanje sadržaja pomoću HMAC SHA-256."
+msgstr "用于以 HMAC SHA-256 签名数据的可选密钥。"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.endpoints.description"
-msgstr "Registrujte jednu ili više krajnjih tačaka i izaberite koje događaje svaka prima."
+msgstr "注册一个或多个端点，并选择每个端点接收哪些事件。"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.submissionCreated"
-msgstr "Novi prilog"
+msgstr "新投稿"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.event.publicationCreated"
-msgstr "Članak objavljen"
+msgstr "文章已发表"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
-msgstr "Dodaj krajnju tačku"
+msgstr "添加端点"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Podešavanja su sačuvana."
+msgstr "设置已保存。"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
-msgstr "Primer poslatog sadržaja"
+msgstr "发送的示例数据"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testEndpoint"
-msgstr "Test"
+msgstr "测试"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testing"
-msgstr "Testiranje…"
+msgstr "正在测试…"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testSent"
-msgstr "Test je poslat."
+msgstr "测试已发送。"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testFailed"
-msgstr "Test nije uspeo."
+msgstr "测试失败。"
 
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
-msgstr "Unesite URL pre testiranja."
+msgstr "测试前请先输入网址。"
