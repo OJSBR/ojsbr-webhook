@@ -42,7 +42,7 @@ Baixe o `.tar.gz` na página de [Releases](https://github.com/OJSBR/ojsbr-webhoo
 
 ```bash
 curl -L -o ojsbr-webhook.tar.gz \
-  https://github.com/OJSBR/ojsbr-webhook/releases/download/1.0.0.4-ojs3.4/ojsbrWebhook-1.0.0.4-ojs3.4.tar.gz
+  https://github.com/OJSBR/ojsbr-webhook/releases/download/1.0.0.4/ojsbrWebhook-1.0.0.4.tar.gz
 ```
 
 > Confira o nome exato do asset em [Releases](https://github.com/OJSBR/ojsbr-webhook/releases/tag/3.4.latest).
