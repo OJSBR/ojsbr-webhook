@@ -75,3 +75,23 @@ msgstr "Testi epäonnistui."
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "Anna URL-osoite ennen testausta."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "Vain http- ja https-osoitteet hyväksytään."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "OJSBR Webhookin testikuorma"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "Testikuormaa ei voitu koodata."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "Testi lähetettiin. HTTP {$status}"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "Testi epäonnistui. HTTP {$status} {$error}"

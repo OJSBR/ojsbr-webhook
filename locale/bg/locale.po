@@ -75,3 +75,23 @@ msgstr "Тестът е неуспешен."
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "Въведете URL адреса преди теста."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "Приемат се само адреси с http и https."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "Тестов payload от OJSBR Webhook"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "Тестовият payload не можа да бъде кодиран."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "Тестът е изпратен успешно. HTTP {$status}"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "Тестът е неуспешен. HTTP {$status} {$error}"

@@ -75,3 +75,23 @@ msgstr "Η δοκιμή απέτυχε."
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "Εισαγάγετε τη διεύθυνση URL πριν από τη δοκιμή."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "Γίνονται δεκτές μόνο διευθύνσεις http και https."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "Δοκιμαστικό payload από το OJSBR Webhook"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "Δεν ήταν δυνατή η κωδικοποίηση του δοκιμαστικού payload."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "Η δοκιμή στάλθηκε. HTTP {$status}"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "Η δοκιμή απέτυχε. HTTP {$status} {$error}"

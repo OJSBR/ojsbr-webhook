@@ -75,3 +75,23 @@ msgstr "Uji gagal."
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "Masukkan URL sebelum menguji."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "Hanya alamat http dan https yang diterima."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "Payload uji dari OJSBR Webhook"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "Payload uji tidak dapat dikodekan."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "Uji berhasil dikirim. HTTP {$status}"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "Uji gagal. HTTP {$status} {$error}"

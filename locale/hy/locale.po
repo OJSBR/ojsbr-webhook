@@ -75,3 +75,23 @@ msgstr "Փորձարկումը ձախողվեց։"
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "Մուտքագրեք URL-ը փորձարկումից առաջ։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "Ընդունվում են միայն http և https հասցեներ։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "OJSBR Webhook-ի փորձնական payload"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "Չհաջողվեց կոդավորել փորձնական payload-ը։"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "Փորձարկումը հաջողությամբ ուղարկվեց։ HTTP {$status}"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "Փորձարկումը ձախողվեց։ HTTP {$status} {$error}"

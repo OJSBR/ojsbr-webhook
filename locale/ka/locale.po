@@ -75,3 +75,23 @@ msgstr "ტესტი ჩავარდა."
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "შეიყვანეთ URL ტესტამდე."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "მიიღება მხოლოდ http და https მისამართები."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "OJSBR Webhook-ის სატესტო payload"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "სატესტო payload-ის კოდირება ვერ მოხერხდა."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "ტესტი წარმატებით გაიგზავნა. HTTP {$status}"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "ტესტი ვერ შესრულდა. HTTP {$status} {$error}"

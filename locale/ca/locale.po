@@ -58,3 +58,18 @@ msgstr "La prova ha fallat."
 
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "Introduïu l'URL abans de provar."
+
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "Només s'accepten adreces http i https."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "Payload de prova d'OJSBR Webhook"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "No s'ha pogut codificar el payload de prova."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "Prova enviada correctament. HTTP {$status}"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "La prova ha fallat. HTTP {$status} {$error}"

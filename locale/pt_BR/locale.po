@@ -58,3 +58,18 @@ msgstr "Falha no teste."
 
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "Informe a URL antes de testar."
+
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "Só são aceitos endereços http e https."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "Payload de teste do OJSBR Webhook"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "Não foi possível codificar o payload de teste."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "Teste enviado com sucesso. HTTP {$status}"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "O teste falhou. HTTP {$status} {$error}"

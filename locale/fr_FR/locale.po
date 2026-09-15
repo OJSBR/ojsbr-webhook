@@ -58,3 +58,18 @@ msgstr "Le test a échoué."
 
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "Saisissez l'URL avant de tester."
+
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "Seules les adresses http et https sont acceptées."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "Charge utile de test d'OJSBR Webhook"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "La charge utile de test n'a pas pu être encodée."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "Test envoyé avec succès. HTTP {$status}"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "Le test a échoué. HTTP {$status} {$error}"

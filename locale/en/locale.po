@@ -58,3 +58,18 @@ msgstr "Test failed."
 
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "Enter the URL before testing."
+
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "Only http and https addresses are accepted."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "Test payload from OJSBR Webhook"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "The test payload could not be encoded."
+
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "Test sent successfully. HTTP {$status}"
+
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "Test failed. HTTP {$status} {$error}"

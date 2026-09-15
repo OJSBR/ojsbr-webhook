@@ -1,7 +1,10 @@
 <?php
 
 /**
- * @file plugins/generic/ojsbrWebhook/OjsbrWebhookPlugin.inc.php
+ * @file plugins/generic/ojsbrWebhook/OjsbrWebhookPlugin.php
+ *
+ * Copyright (c) 2026 OJSBR (https://ojsbr.com)
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class OjsbrWebhookPlugin
  *
@@ -25,6 +28,9 @@ class OjsbrWebhookPlugin extends GenericPlugin
     public const EVENT_SUBMISSION_CREATED = 'submission.created';
     public const EVENT_PUBLICATION_CREATED = 'publication.created';
 
+    /** The only schemes an endpoint may use: anything else would let curl read files or reach other services. */
+    public const ALLOWED_SCHEMES = ['http', 'https'];
+
     /** @var array<string, bool> */
     private array $sentEvents = [];
 
@@ -32,11 +38,9 @@ class OjsbrWebhookPlugin extends GenericPlugin
     {
         $success = parent::register($category, $path, $mainContextId);
 
-        if ($success && $this->getEnabled($mainContextId)) {
-            Hook::add('DAO::insertObject', [$this, 'handleDaoInsertObject']);
+        if ($success && !Application::isUnderMaintenance() && $this->getEnabled($mainContextId)) {
             Hook::add('Publication::publish', [$this, 'handlePublicationPublish']);
             Hook::add('Submission::add', [$this, 'handleSubmissionAdd']);
-            Hook::add('Submission::insert', [$this, 'handleSubmissionInsert']);
         }
 
         return $success;
@@ -92,11 +96,26 @@ class OjsbrWebhookPlugin extends GenericPlugin
         $context = $request->getContext();
         $contextId = $context ? (int) $context->getId() : 0;
 
+        // Saving and testing change the endpoints or send data out, so they must
+        // come from the settings form itself: the plugin grid does not check the
+        // CSRF token of manage() requests, and a forged request could otherwise
+        // point the journal's submissions at a third party.
+        if ($request->getUserVar('testEndpoint') || $request->getUserVar('save')) {
+            if (!$request->isPost() || !$request->checkCSRF()) {
+                return new JSONMessage(false, __('form.csrfInvalid'));
+            }
+        }
+
         if ($request->getUserVar('testEndpoint')) {
             return $this->testEndpoint($request, $contextId);
         }
 
         if ($request->getUserVar('save')) {
+            foreach ($this->endpointsFromRequest($request) as $endpoint) {
+                if (!self::isAllowedUrl($endpoint['url'])) {
+                    return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.invalidUrl'));
+                }
+            }
             $this->updateSetting(
                 $contextId,
                 'webhookEndpoints',
@@ -155,8 +174,9 @@ class OjsbrWebhookPlugin extends GenericPlugin
         if ($url === '') {
             return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.testMissingUrl'));
         }
-
-        error_log(sprintf('[ojsbrWebhook] Test endpoint requested. URL: %s Event: %s', $url, $event));
+        if (!self::isAllowedUrl($url)) {
+            return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.invalidUrl'));
+        }
 
         if (!in_array($event, [self::EVENT_SUBMISSION_CREATED, self::EVENT_PUBLICATION_CREATED], true)) {
             $event = self::EVENT_SUBMISSION_CREATED;
@@ -174,13 +194,13 @@ class OjsbrWebhookPlugin extends GenericPlugin
                 'submissionId' => $event === self::EVENT_PUBLICATION_CREATED ? 123 : null,
                 'contextId' => $contextId ?: null,
                 'data' => [
-                    'message' => 'Payload de teste do OJSBR Webhook',
+                    'message' => __('plugins.generic.ojsbrWebhook.settings.testPayloadMessage'),
                 ],
             ],
         ];
         $body = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         if ($body === false) {
-            return new JSONMessage(false, 'Falha ao codificar payload de teste.');
+            return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.testEncodeFailed'));
         }
 
         $result = $this->sendWebhookToEndpoint($event, [
@@ -189,28 +209,11 @@ class OjsbrWebhookPlugin extends GenericPlugin
             'events' => [$event],
         ], $body);
 
-        error_log(sprintf(
-            '[ojsbrWebhook] Test endpoint result. URL: %s Status: %d Error: %s',
-            $url,
-            $result['statusCode'],
-            $result['error']
-        ));
-
         if ($result['ok']) {
-            return new JSONMessage(true, sprintf('Teste enviado com sucesso. HTTP %d', $result['statusCode']));
+            return new JSONMessage(true, __('plugins.generic.ojsbrWebhook.settings.testSentStatus', ['status' => $result['statusCode']]));
         }
 
-        return new JSONMessage(false, sprintf('Falha no teste. HTTP %d %s', $result['statusCode'], $result['error']));
-    }
-
-    public function handleSubmissionInsert($hookName, $args)
-    {
-        $submission = $this->firstMatchingObject($args, 'isSubmission');
-        if ($submission) {
-            $this->sendWebhook(self::EVENT_SUBMISSION_CREATED, $submission);
-        }
-
-        return false;
+        return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.testFailedStatus', ['status' => $result['statusCode'], 'error' => $result['error']]));
     }
 
     public function handleSubmissionAdd($hookName, $args)
@@ -230,27 +233,12 @@ class OjsbrWebhookPlugin extends GenericPlugin
             return false;
         }
 
+        // Scheduled in a future issue: not public yet, so nothing to announce.
         if (!$this->isPublishedPublication($publication)) {
-            error_log(sprintf(
-                '[ojsbrWebhook] Publication publish skipped (scheduled, not public yet). ID: %s Status: %s',
-                method_exists($publication, 'getId') ? (string) $publication->getId() : 'unknown',
-                method_exists($publication, 'getData') ? (string) $publication->getData('status') : 'unknown'
-            ));
             return false;
         }
 
         $this->sendWebhook(self::EVENT_PUBLICATION_CREATED, $publication);
-
-        return false;
-    }
-
-    public function handleDaoInsertObject($hookName, $args)
-    {
-        $object = $this->firstMatchingObject($args, 'isSubmission');
-
-        if ($this->isSubmission($object)) {
-            $this->sendWebhook(self::EVENT_SUBMISSION_CREATED, $object);
-        }
 
         return false;
     }
@@ -261,22 +249,10 @@ class OjsbrWebhookPlugin extends GenericPlugin
             return;
         }
 
-        error_log(sprintf(
-            '[ojsbrWebhook] Event captured. Event: %s Class: %s ID: %s',
-            $event,
-            get_class($object),
-            method_exists($object, 'getId') ? (string) $object->getId() : 'unknown'
-        ));
-
         $contextId = $this->resolveContextId($object);
         $endpoints = $this->endpointsForContext($contextId);
         $endpoints = array_values(array_filter($endpoints, fn ($endpoint) => in_array($event, $endpoint['events'], true)));
         if (empty($endpoints)) {
-            error_log(sprintf(
-                '[ojsbrWebhook] No endpoints configured for event %s in context %d.',
-                $event,
-                $contextId
-            ));
             return;
         }
 
@@ -311,11 +287,40 @@ class OjsbrWebhookPlugin extends GenericPlugin
         return $event . ':' . get_class($object) . ':' . $id;
     }
 
+    /**
+     * Whether a URL may receive webhooks: an absolute http(s) URL with a host.
+     */
+    public static function isAllowedUrl(string $url): bool
+    {
+        $parts = parse_url(trim($url));
+
+        return is_array($parts)
+            && in_array(strtolower($parts['scheme'] ?? ''), self::ALLOWED_SCHEMES, true)
+            && !empty($parts['host']);
+    }
+
+    /**
+     * The host of an endpoint, for the log: a full URL can carry a token.
+     */
+    public static function logTarget(string $url): string
+    {
+        return (string) (parse_url($url, PHP_URL_HOST) ?: 'invalid URL');
+    }
+
     protected function sendWebhookToEndpoint($event, $endpoint, $body)
     {
+        if (!self::isAllowedUrl($endpoint['url'])) {
+            error_log(sprintf('[ojsbrWebhook] Refused to send %s webhook to a non-http(s) endpoint.', $event));
+            return [
+                'ok' => false,
+                'statusCode' => 0,
+                'error' => 'Only http and https endpoints are accepted.',
+            ];
+        }
+
         $headers = [
             'Content-Type: application/json',
-            'User-Agent: OJSBR-Webhook/1.0.0',
+            'User-Agent: OJSBR-Webhook/' . ($this->getCurrentVersion() ? $this->getCurrentVersion()->getVersionString() : '1'),
             'X-OJSBR-Webhook-Event: ' . $event,
         ];
 
@@ -340,6 +345,9 @@ class OjsbrWebhookPlugin extends GenericPlugin
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_TIMEOUT => 15,
+            // Redirects are not followed, and no other protocol is ever used.
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
         ]);
 
         curl_exec($ch);
@@ -348,7 +356,7 @@ class OjsbrWebhookPlugin extends GenericPlugin
         curl_close($ch);
 
         if ($error !== '' || $statusCode < 200 || $statusCode >= 300) {
-            error_log(sprintf('[ojsbrWebhook] Failed to send %s webhook. Status: %d Error: %s', $event, $statusCode, $error));
+            error_log(sprintf('[ojsbrWebhook] Failed to send %s webhook to %s. Status: %d Error: %s', $event, self::logTarget($endpoint['url']), $statusCode, $error));
         }
 
         return [

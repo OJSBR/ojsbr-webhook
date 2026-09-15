@@ -3,9 +3,10 @@
 /**
  * @file plugins/generic/ojsbrWebhook/index.php
  *
- * @brief Wrapper for OJSBR Webhook plugin.
+ * Copyright (c) 2026 OJSBR (https://ojsbr.com)
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @brief Wrapper for the OJSBR Webhook plugin.
  */
-
-require_once('OjsbrWebhookPlugin.inc.php');
 
 return new \APP\plugins\generic\ojsbrWebhook\OjsbrWebhookPlugin();

@@ -1,3 +1,11 @@
+{**
+ * plugins/generic/ojsbrWebhook/templates/settings.tpl
+ *
+ * Copyright (c) 2026 OJSBR (https://ojsbr.com)
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * Webhook endpoints of the journal: URL, secret, events, test and removal.
+ *}
 <script>
 	$(function() {ldelim}
 		var testEndpointAction = '{$testEndpointAction|escape:"javascript"}';
@@ -16,8 +24,8 @@
 					'<td><input type="text" name="endpointSecret[' + index + ']" value="" class="textField" style="width: 100%;"></td>',
 					'<td style="text-align: center;"><input type="checkbox" name="endpointSubmission[' + index + ']" value="1" checked></td>',
 					'<td style="text-align: center;"><input type="checkbox" name="endpointPublication[' + index + ']" value="1" checked></td>',
-					'<td style="text-align: center;"><button type="button" class="pkpButton ojsbrWebhookTestEndpoint">{translate|escape:"javascript" key="plugins.generic.ojsbrWebhook.settings.testEndpoint"}</button><div class="ojsbrWebhookTestResult"></div></td>',
-					'<td style="text-align: center;"><button type="button" class="pkpButton ojsbrWebhookRemoveEndpoint">{translate|escape:"javascript" key="common.delete"}</button></td>',
+					'<td style="text-align: center;"><button type="button" class="pkpButton ojsbrWebhookTestEndpoint">{"plugins.generic.ojsbrWebhook.settings.testEndpoint"|translate|escape:"javascript"}</button><div class="ojsbrWebhookTestResult"></div></td>',
+					'<td style="text-align: center;"><button type="button" class="pkpButton ojsbrWebhookRemoveEndpoint">{"common.delete"|translate|escape:"javascript"}</button></td>',
 				'</tr>'
 			].join('');
 			tbody.append(row);
@@ -45,7 +53,7 @@
 			var directEvent = $('<input type="hidden" name="event">').val(row.find('input[name^="endpointSubmission"]').is(':checked') ? '{$eventSubmissionCreated|escape:"javascript"}' : '{$eventPublicationCreated|escape:"javascript"}');
 
 			button.prop('disabled', true);
-			result.text('{translate|escape:"javascript" key="plugins.generic.ojsbrWebhook.settings.testing"}');
+			result.text('{"plugins.generic.ojsbrWebhook.settings.testing"|translate|escape:"javascript"}');
 			form.append(hidden);
 			form.append(testFlag);
 			form.append(directUrl);
@@ -61,12 +69,12 @@
 			{rdelim})
 				.done(function(response) {ldelim}
 					var ok = response && response.status === true;
-					var message = response && response.content ? response.content : (ok ? '{translate|escape:"javascript" key="plugins.generic.ojsbrWebhook.settings.testSent"}' : '{translate|escape:"javascript" key="plugins.generic.ojsbrWebhook.settings.testFailed"}');
+					var message = response && response.content ? response.content : (ok ? '{"plugins.generic.ojsbrWebhook.settings.testSent"|translate|escape:"javascript"}' : '{"plugins.generic.ojsbrWebhook.settings.testFailed"|translate|escape:"javascript"}');
 					result.text(message).css('color', ok ? 'green' : 'red');
 				{rdelim})
 				.fail(function(xhr) {ldelim}
 					var details = xhr.responseText ? ': ' + xhr.responseText.substring(0, 180) : '';
-					result.text('{translate|escape:"javascript" key="plugins.generic.ojsbrWebhook.settings.testFailed"} ' + xhr.status + details).css('color', 'red');
+					result.text('{"plugins.generic.ojsbrWebhook.settings.testFailed"|translate|escape:"javascript"} ' + xhr.status + details).css('color', 'red');
 				{rdelim})
 				.always(function() {ldelim}
 					hidden.remove();
@@ -141,7 +149,7 @@
   "event": "submission.created",
   "occurredAt": "2026-05-23T19:20:00+00:00",
   "contextId": 1,
-  "baseUrl": "https://revistaft.com",
+  "baseUrl": "https://journal.example.org",
   "object": {
     "id": 123,
     "class": "APP\\submission\\Submission",

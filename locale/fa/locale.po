@@ -75,3 +75,23 @@ msgstr "آزمایش ناموفق بود."
 #, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.testMissingUrl"
 msgstr "پیش از آزمایش، نشانی را وارد کنید."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.invalidUrl"
+msgstr "فقط نشانی‌های http و https پذیرفته می‌شوند."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testPayloadMessage"
+msgstr "بار آزمایشی از OJSBR Webhook"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testEncodeFailed"
+msgstr "رمزگذاری بار آزمایشی ممکن نشد."
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testSentStatus"
+msgstr "آزمون با موفقیت ارسال شد. HTTP {$status}"
+
+#, fuzzy
+msgid "plugins.generic.ojsbrWebhook.settings.testFailedStatus"
+msgstr "آزمون ناموفق بود. HTTP {$status} {$error}"
