@@ -13,7 +13,9 @@
 
 namespace APP\plugins\generic\ojsbrWebhook\tests;
 
-class TemplateSafetyTest extends TestCase
+use PKP\tests\PKPTestCase;
+
+class TemplateSafetyTest extends PKPTestCase
 {
     /** @return string[] */
     protected function templates(): array
@@ -56,7 +58,7 @@ class TemplateSafetyTest extends TestCase
         $files = array_merge(glob($root . '/*.php'), glob($root . '/classes/*.php'), glob($root . '/classes/*/*.php'), glob(__DIR__ . '/*.php'), $this->templates(), glob($root . '/js/*.js'), glob($root . '/css/*.css'));
         foreach ($files as $file) {
             $source = (string) file_get_contents($file);
-            $this->assertStringContainsString('Copyright (c) 2026 OJSBR (https://ojsbr.com)', $source, basename($file) . ' lacks the header.');
+            $this->assertMatchesRegularExpression('/Copyright \(c\) (\d{4}-)?2026 OJSBR \(https:\/\/ojsbr\.com\)/', $source, basename($file) . ' lacks the header.');
             $this->assertStringNotContainsString('https://ojsbr.com' . '.br', $source, basename($file) . ' points at the old address.');
         }
     }

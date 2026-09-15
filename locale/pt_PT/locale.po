@@ -38,9 +38,6 @@ msgstr "Artigo publicado"
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
 msgstr "Adicionar endpoint"
 
-msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Configurações guardadas."
-
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
 msgstr "Exemplo de payload enviado"
 

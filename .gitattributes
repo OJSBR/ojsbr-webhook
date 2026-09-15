@@ -3,3 +3,6 @@
 .gitattributes export-ignore
 test-server export-ignore
 scripts export-ignore
+cypress export-ignore
+tests export-ignore
+error_log export-ignore

@@ -49,10 +49,6 @@ msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
 msgstr "إضافة نقطة نهاية"
 
 #, fuzzy
-msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "حُفظت الإعدادات."
-
-#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
 msgstr "نموذج الحمولة المُرسَلة"
 

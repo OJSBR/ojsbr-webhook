@@ -49,10 +49,6 @@ msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
 msgstr "Tambah titik akhir"
 
 #, fuzzy
-msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Tetapan disimpan."
-
-#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
 msgstr "Contoh muatan yang dihantar"
 

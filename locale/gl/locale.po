@@ -38,9 +38,6 @@ msgstr "Artigo publicado"
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
 msgstr "Engadir punto final"
 
-msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Gardouse a configuración."
-
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
 msgstr "Exemplo de carga enviada"
 

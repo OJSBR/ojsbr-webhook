@@ -49,10 +49,6 @@ msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
 msgstr "添加端点"
 
 #, fuzzy
-msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "设置已保存。"
-
-#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
 msgstr "发送的示例数据"
 

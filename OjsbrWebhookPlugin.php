@@ -15,8 +15,10 @@ namespace APP\plugins\generic\ojsbrWebhook;
 
 use APP\core\Application;
 use APP\facades\Repo;
+use APP\notification\NotificationManager;
+use APP\plugins\generic\ojsbrWebhook\jobs\SendWebhook;
+use APP\publication\Publication;
 use APP\submission\Submission;
-use APP\template\TemplateManager;
 use PKP\core\JSONMessage;
 use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\AjaxModal;
@@ -27,188 +29,144 @@ class OjsbrWebhookPlugin extends GenericPlugin
 {
     public const EVENT_SUBMISSION_CREATED = 'submission.created';
     public const EVENT_PUBLICATION_CREATED = 'publication.created';
+    public const EVENTS = [self::EVENT_SUBMISSION_CREATED, self::EVENT_PUBLICATION_CREATED];
 
-    /** The only schemes an endpoint may use: anything else would let curl read files or reach other services. */
-    public const ALLOWED_SCHEMES = ['http', 'https'];
+    public const SETTING_ENDPOINTS = 'webhookEndpoints';
 
-    /** @var array<string, bool> */
-    private array $sentEvents = [];
+    /** @var array<string, bool> Events already queued in this request. */
+    private array $queuedEvents = [];
 
+    /**
+     * @copydoc Plugin::register()
+     *
+     * @param null|mixed $mainContextId
+     */
     public function register($category, $path, $mainContextId = null)
     {
         $success = parent::register($category, $path, $mainContextId);
 
-        if ($success && !Application::isUnderMaintenance() && $this->getEnabled($mainContextId)) {
-            Hook::add('Publication::publish', [$this, 'handlePublicationPublish']);
+        // Submissions and publications are also created by imports, the API and scheduled
+        // tasks, where there is no journal in the request: the hooks are always added and
+        // each callback checks whether the plugin is on in the journal of the entity.
+        if ($success && !Application::isUnderMaintenance()) {
             Hook::add('Submission::add', [$this, 'handleSubmissionAdd']);
+            Hook::add('Publication::publish', [$this, 'handlePublicationPublish']);
         }
 
         return $success;
     }
 
+    /**
+     * @copydoc Plugin::getDisplayName()
+     */
     public function getDisplayName()
     {
         return __('plugins.generic.ojsbrWebhook.displayName');
     }
 
+    /**
+     * @copydoc Plugin::getDescription()
+     */
     public function getDescription()
     {
         return __('plugins.generic.ojsbrWebhook.description');
     }
 
+    /**
+     * @copydoc Plugin::getActions()
+     */
     public function getActions($request, $actionArgs)
     {
         $actions = parent::getActions($request, $actionArgs);
-
         if (!$this->getEnabled()) {
             return $actions;
         }
 
         $router = $request->getRouter();
-        $settingsUrl = $router->url(
-            $request,
-            null,
-            null,
-            'manage',
-            null,
-            array_merge($actionArgs, [
-                'verb' => 'settings',
-                'plugin' => $this->getName(),
-                'category' => 'generic',
-            ])
-        );
-
-        $actions[] = new LinkAction(
+        array_unshift($actions, new LinkAction(
             'settings',
-            new AjaxModal($settingsUrl, __('manager.plugins.settings'), 'modal_manage'),
+            new AjaxModal(
+                $router->url($request, null, null, 'manage', null, ['verb' => 'settings', 'plugin' => $this->getName(), 'category' => 'generic']),
+                $this->getDisplayName()
+            ),
             __('manager.plugins.settings')
-        );
+        ));
 
         return $actions;
     }
 
+    /**
+     * @copydoc Plugin::manage()
+     */
     public function manage($args, $request)
     {
-        if ($request->getUserVar('verb') !== 'settings') {
-            return parent::manage($args, $request);
-        }
-
         $context = $request->getContext();
-        $contextId = $context ? (int) $context->getId() : 0;
+        $contextId = $context ? (int) $context->getId() : Application::CONTEXT_SITE;
 
-        // Saving and testing change the endpoints or send data out, so they must
-        // come from the settings form itself: the plugin grid does not check the
-        // CSRF token of manage() requests, and a forged request could otherwise
-        // point the journal's submissions at a third party.
-        if ($request->getUserVar('testEndpoint') || $request->getUserVar('save')) {
-            if (!$request->isPost() || !$request->checkCSRF()) {
-                return new JSONMessage(false, __('form.csrfInvalid'));
-            }
-        }
-
-        if ($request->getUserVar('testEndpoint')) {
-            return $this->testEndpoint($request, $contextId);
-        }
-
-        if ($request->getUserVar('save')) {
-            foreach ($this->endpointsFromRequest($request) as $endpoint) {
-                if (!self::isAllowedUrl($endpoint['url'])) {
-                    return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.invalidUrl'));
+        switch ($request->getUserVar('verb')) {
+            case 'settings':
+                $form = new OjsbrWebhookSettingsForm($this, $contextId);
+                if (!$request->getUserVar('save')) {
+                    $form->initData();
+                    return new JSONMessage(true, $form->fetch($request));
                 }
-            }
-            $this->updateSetting(
-                $contextId,
-                'webhookEndpoints',
-                json_encode($this->endpointsFromRequest($request), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-                'string'
-            );
 
-            return new JSONMessage(true, __('plugins.generic.ojsbrWebhook.settings.saved'));
+                $form->readInputData();
+                if (!$form->validate()) {
+                    return new JSONMessage(true, $form->fetch($request));
+                }
+
+                $form->execute();
+                (new NotificationManager())->createTrivialNotification($request->getUser()->getId());
+                return new JSONMessage(true);
+
+            case 'test':
+                // Sends data out, so it must come from the settings form: a POST with its token.
+                if (!$request->isPost() || !$request->checkCSRF()) {
+                    return new JSONMessage(false, __('form.csrfInvalid'));
+                }
+                return $this->testEndpoint($request, $contextId);
         }
 
-        $templateMgr = TemplateManager::getManager($request);
-        $router = $request->getRouter();
-        $templateMgr->assign([
-            'pluginName' => $this->getName(),
-            'category' => 'generic',
-            'settingsFormAction' => $router->url($request, null, null, 'manage', null, [
-                'plugin' => $this->getName(),
-                'category' => 'generic',
-                'verb' => 'settings',
-                'save' => 1,
-            ]),
-            'testEndpointAction' => $router->url($request, null, null, 'manage', null, [
-                'plugin' => $this->getName(),
-                'category' => 'generic',
-                'verb' => 'settings',
-                'testEndpoint' => 1,
-            ]),
-            'endpoints' => $this->endpointsForContext($contextId, true),
-            'eventSubmissionCreated' => self::EVENT_SUBMISSION_CREATED,
-            'eventPublicationCreated' => self::EVENT_PUBLICATION_CREATED,
-        ]);
-
-        return new JSONMessage(true, $templateMgr->fetch($this->getTemplateResource('settings.tpl')));
+        return parent::manage($args, $request);
     }
 
-    protected function testEndpoint($request, $contextId)
+    /**
+     * Sends a sample payload to one endpoint of the settings form and reports the answer.
+     */
+    protected function testEndpoint($request, int $contextId): JSONMessage
     {
-        $index = $request->getUserVar('testEndpointIndex');
-        if ($index !== null) {
-            $urls = (array) $request->getUserVar('endpointUrl');
-            $secrets = (array) $request->getUserVar('endpointSecret');
-            $submissionEvents = (array) $request->getUserVar('endpointSubmission');
-            $publicationEvents = (array) $request->getUserVar('endpointPublication');
-            $url = trim((string) ($urls[$index] ?? ''));
-            $secret = trim((string) ($secrets[$index] ?? ''));
-            $event = isset($submissionEvents[$index]) ? self::EVENT_SUBMISSION_CREATED : self::EVENT_PUBLICATION_CREATED;
-            if (!isset($submissionEvents[$index]) && !isset($publicationEvents[$index])) {
-                $event = self::EVENT_SUBMISSION_CREATED;
-            }
-        } else {
-            $url = trim((string) $request->getUserVar('url'));
-            $secret = trim((string) $request->getUserVar('secret'));
-            $event = (string) ($request->getUserVar('event') ?: self::EVENT_SUBMISSION_CREATED);
-        }
-
+        $url = trim((string) $request->getUserVar('url'));
+        $event = (string) $request->getUserVar('event');
         if ($url === '') {
             return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.testMissingUrl'));
         }
-        if (!self::isAllowedUrl($url)) {
+        if (!WebhookSender::isAllowedUrl($url)) {
             return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.invalidUrl'));
         }
-
-        if (!in_array($event, [self::EVENT_SUBMISSION_CREATED, self::EVENT_PUBLICATION_CREATED], true)) {
+        if (!in_array($event, self::EVENTS, true)) {
             $event = self::EVENT_SUBMISSION_CREATED;
         }
 
-        $payload = [
+        $body = self::encode([
             'event' => $event,
             'occurredAt' => gmdate('c'),
             'contextId' => $contextId ?: null,
-            'baseUrl' => Application::get()->getRequest()->getBaseUrl(),
+            'baseUrl' => $request->getBaseUrl(),
             'test' => true,
             'object' => [
                 'id' => 123,
                 'class' => 'OJSBR\\Webhook\\Test',
                 'submissionId' => $event === self::EVENT_PUBLICATION_CREATED ? 123 : null,
                 'contextId' => $contextId ?: null,
-                'data' => [
-                    'message' => __('plugins.generic.ojsbrWebhook.settings.testPayloadMessage'),
-                ],
+                'data' => ['message' => __('plugins.generic.ojsbrWebhook.settings.testPayloadMessage')],
             ],
-        ];
-        $body = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        if ($body === false) {
+        ]);
+        if ($body === null) {
             return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.testEncodeFailed'));
         }
 
-        $result = $this->sendWebhookToEndpoint($event, [
-            'url' => $url,
-            'secret' => $secret,
-            'events' => [$event],
-        ], $body);
-
+        $result = WebhookSender::send($url, trim((string) $request->getUserVar('secret')), $event, $body, $this->userAgent());
         if ($result['ok']) {
             return new JSONMessage(true, __('plugins.generic.ojsbrWebhook.settings.testSentStatus', ['status' => $result['statusCode']]));
         }
@@ -216,345 +174,158 @@ class OjsbrWebhookPlugin extends GenericPlugin
         return new JSONMessage(false, __('plugins.generic.ojsbrWebhook.settings.testFailedStatus', ['status' => $result['statusCode'], 'error' => $result['error']]));
     }
 
+    /**
+     * Hook callback: Submission::add
+     *
+     * @param array $args [Submission]
+     */
     public function handleSubmissionAdd($hookName, $args)
     {
-        $submission = $this->firstMatchingObject($args, 'isSubmission');
-        if ($submission) {
-            $this->sendWebhook(self::EVENT_SUBMISSION_CREATED, $submission);
+        $submission = $args[0] ?? null;
+        if ($submission instanceof Submission) {
+            $this->queueWebhooks(self::EVENT_SUBMISSION_CREATED, $submission, (int) $submission->getData('contextId'));
         }
 
-        return false;
+        return Hook::CONTINUE;
     }
 
+    /**
+     * Hook callback: Publication::publish
+     *
+     * @param array $args [Publication $newPublication, Publication $publication, Submission $submission]
+     */
     public function handlePublicationPublish($hookName, $args)
     {
-        $publication = $this->firstMatchingObject($args, 'isPublication');
-        if (!$publication) {
-            return false;
-        }
-
+        $publication = $args[0] ?? null;
+        $submission = $args[2] ?? null;
         // Scheduled in a future issue: not public yet, so nothing to announce.
-        if (!$this->isPublishedPublication($publication)) {
-            return false;
+        if (!$publication instanceof Publication || (int) $publication->getData('status') !== Submission::STATUS_PUBLISHED) {
+            return Hook::CONTINUE;
         }
 
-        $this->sendWebhook(self::EVENT_PUBLICATION_CREATED, $publication);
+        $contextId = $submission instanceof Submission
+            ? (int) $submission->getData('contextId')
+            : (int) Repo::submission()->get((int) $publication->getData('submissionId'))?->getData('contextId');
+        $this->queueWebhooks(self::EVENT_PUBLICATION_CREATED, $publication, $contextId);
 
-        return false;
+        return Hook::CONTINUE;
     }
 
-    protected function sendWebhook($event, $object)
+    /**
+     * Queues one delivery per endpoint of the journal that receives the event.
+     */
+    protected function queueWebhooks(string $event, $object, int $contextId): void
     {
-        if ($this->wasSent($event, $object)) {
+        $key = $event . ':' . get_class($object) . ':' . $object->getId();
+        if (!$contextId || isset($this->queuedEvents[$key]) || !$this->getEnabled($contextId)) {
             return;
         }
 
-        $contextId = $this->resolveContextId($object);
-        $endpoints = $this->endpointsForContext($contextId);
-        $endpoints = array_values(array_filter($endpoints, fn ($endpoint) => in_array($event, $endpoint['events'], true)));
-        if (empty($endpoints)) {
+        $endpoints = array_filter($this->getEndpoints($contextId), fn (array $endpoint) => in_array($event, $endpoint['events'], true));
+        if (!$endpoints) {
             return;
         }
 
-        $payload = $this->payload($event, $object, $contextId);
-        $body = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        if ($body === false) {
-            error_log('[ojsbrWebhook] Failed to encode webhook payload.');
+        $body = self::encode($this->payload($event, $object, $contextId));
+        if ($body === null) {
+            error_log('[ojsbrWebhook] Failed to encode the payload of ' . $key . '.');
             return;
         }
 
         foreach ($endpoints as $endpoint) {
-            $this->sendWebhookToEndpoint($event, $endpoint, $body);
+            dispatch(new SendWebhook($endpoint['url'], $endpoint['secret'], $event, $body, $this->userAgent()));
         }
-
-        $this->markSent($event, $object);
-    }
-
-    protected function wasSent($event, $object)
-    {
-        return isset($this->sentEvents[$this->sentEventKey($event, $object)]);
-    }
-
-    protected function markSent($event, $object)
-    {
-        $this->sentEvents[$this->sentEventKey($event, $object)] = true;
-    }
-
-    protected function sentEventKey($event, $object)
-    {
-        $id = method_exists($object, 'getId') ? (string) $object->getId() : spl_object_hash($object);
-
-        return $event . ':' . get_class($object) . ':' . $id;
+        $this->queuedEvents[$key] = true;
     }
 
     /**
-     * Whether a URL may receive webhooks: an absolute http(s) URL with a host.
+     * The endpoints of a journal, or the site-wide ones when the journal has none.
+     *
+     * @return array<int, array{url: string, secret: string, events: string[]}>
      */
-    public static function isAllowedUrl(string $url): bool
+    public function getEndpoints(int $contextId): array
     {
-        $parts = parse_url(trim($url));
+        $endpoints = self::normalizeEndpoints((string) ($this->getSetting($contextId, self::SETTING_ENDPOINTS) ?: $this->getSetting(Application::CONTEXT_SITE, self::SETTING_ENDPOINTS)));
+        if ($endpoints) {
+            return $endpoints;
+        }
 
-        return is_array($parts)
-            && in_array(strtolower($parts['scheme'] ?? ''), self::ALLOWED_SCHEMES, true)
-            && !empty($parts['host']);
+        // Settings of 1.0.0.0: one URL and secret, for both events.
+        $url = trim((string) ($this->getSetting($contextId, 'webhookUrl') ?: $this->getSetting(Application::CONTEXT_SITE, 'webhookUrl')));
+        if ($url === '' || !WebhookSender::isAllowedUrl($url)) {
+            return [];
+        }
+
+        return [[
+            'url' => $url,
+            'secret' => (string) ($this->getSetting($contextId, 'webhookSecret') ?: $this->getSetting(Application::CONTEXT_SITE, 'webhookSecret')),
+            'events' => self::EVENTS,
+        ]];
     }
 
     /**
-     * The host of an endpoint, for the log: a full URL can carry a token.
+     * The stored endpoints, without entries that have no http(s) URL or no known event.
+     *
+     * @return array<int, array{url: string, secret: string, events: string[]}>
      */
-    public static function logTarget(string $url): string
+    public static function normalizeEndpoints(string $json): array
     {
-        return (string) (parse_url($url, PHP_URL_HOST) ?: 'invalid URL');
-    }
-
-    protected function sendWebhookToEndpoint($event, $endpoint, $body)
-    {
-        if (!self::isAllowedUrl($endpoint['url'])) {
-            error_log(sprintf('[ojsbrWebhook] Refused to send %s webhook to a non-http(s) endpoint.', $event));
-            return [
-                'ok' => false,
-                'statusCode' => 0,
-                'error' => 'Only http and https endpoints are accepted.',
-            ];
-        }
-
-        $headers = [
-            'Content-Type: application/json',
-            'User-Agent: OJSBR-Webhook/' . ($this->getCurrentVersion() ? $this->getCurrentVersion()->getVersionString() : '1'),
-            'X-OJSBR-Webhook-Event: ' . $event,
-        ];
-
-        if ($endpoint['secret'] !== '') {
-            $headers[] = 'X-OJSBR-Webhook-Signature: sha256=' . hash_hmac('sha256', $body, $endpoint['secret']);
-        }
-
-        $ch = curl_init($endpoint['url']);
-        if ($ch === false) {
-            error_log('[ojsbrWebhook] Failed to initialize curl.');
-            return [
-                'ok' => false,
-                'statusCode' => 0,
-                'error' => 'Failed to initialize curl.',
-            ];
-        }
-
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $body,
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 5,
-            CURLOPT_TIMEOUT => 15,
-            // Redirects are not followed, and no other protocol is ever used.
-            CURLOPT_FOLLOWLOCATION => false,
-            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
-        ]);
-
-        curl_exec($ch);
-        $error = curl_error($ch);
-        $statusCode = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        curl_close($ch);
-
-        if ($error !== '' || $statusCode < 200 || $statusCode >= 300) {
-            error_log(sprintf('[ojsbrWebhook] Failed to send %s webhook to %s. Status: %d Error: %s', $event, self::logTarget($endpoint['url']), $statusCode, $error));
-        }
-
-        return [
-            'ok' => $error === '' && $statusCode >= 200 && $statusCode < 300,
-            'statusCode' => $statusCode,
-            'error' => $error,
-        ];
-    }
-
-    protected function endpointsFromRequest($request)
-    {
-        $urls = (array) $request->getUserVar('endpointUrl');
-        $secrets = (array) $request->getUserVar('endpointSecret');
-        $submissionEvents = (array) $request->getUserVar('endpointSubmission');
-        $publicationEvents = (array) $request->getUserVar('endpointPublication');
+        $decoded = json_decode($json, true);
         $endpoints = [];
-
-        foreach ($urls as $index => $url) {
-            $url = trim((string) $url);
-            if ($url === '') {
+        foreach (is_array($decoded) ? $decoded : [] as $endpoint) {
+            if (!is_array($endpoint) || !is_array($endpoint['events'] ?? null) || !WebhookSender::isAllowedUrl((string) ($endpoint['url'] ?? ''))) {
                 continue;
             }
-
-            $events = [];
-            if (isset($submissionEvents[$index])) {
-                $events[] = self::EVENT_SUBMISSION_CREATED;
-            }
-            if (isset($publicationEvents[$index])) {
-                $events[] = self::EVENT_PUBLICATION_CREATED;
-            }
-
-            if (empty($events)) {
-                continue;
-            }
-
-            $endpoints[] = [
-                'url' => $url,
-                'secret' => trim((string) ($secrets[$index] ?? '')),
-                'events' => $events,
-            ];
-        }
-
-        return $endpoints;
-    }
-
-    protected function endpointsForContext($contextId, $includeEmptyRow = false)
-    {
-        $json = (string) ($this->getSetting($contextId, 'webhookEndpoints') ?: $this->getSetting(0, 'webhookEndpoints'));
-        $endpoints = $this->normalizeEndpoints($json);
-
-        if (empty($endpoints)) {
-            $legacyUrl = trim((string) ($this->getSetting($contextId, 'webhookUrl') ?: $this->getSetting(0, 'webhookUrl')));
-            if ($legacyUrl !== '') {
+            $events = array_values(array_intersect(self::EVENTS, $endpoint['events']));
+            if ($events) {
                 $endpoints[] = [
-                    'url' => $legacyUrl,
-                    'secret' => (string) ($this->getSetting($contextId, 'webhookSecret') ?: $this->getSetting(0, 'webhookSecret')),
-                    'events' => [self::EVENT_SUBMISSION_CREATED, self::EVENT_PUBLICATION_CREATED],
+                    'url' => trim((string) $endpoint['url']),
+                    'secret' => (string) ($endpoint['secret'] ?? ''),
+                    'events' => $events,
                 ];
             }
         }
 
-        if ($includeEmptyRow) {
-            $endpoints[] = [
-                'url' => '',
-                'secret' => '',
-                'events' => [self::EVENT_SUBMISSION_CREATED, self::EVENT_PUBLICATION_CREATED],
-            ];
-        }
-
         return $endpoints;
     }
 
-    protected function normalizeEndpoints($json)
-    {
-        $decoded = json_decode((string) $json, true);
-        if (!is_array($decoded)) {
-            return [];
-        }
-
-        $endpoints = [];
-        foreach ($decoded as $endpoint) {
-            if (!is_array($endpoint) || empty($endpoint['url']) || empty($endpoint['events']) || !is_array($endpoint['events'])) {
-                continue;
-            }
-
-            $events = array_values(array_intersect($endpoint['events'], [
-                self::EVENT_SUBMISSION_CREATED,
-                self::EVENT_PUBLICATION_CREATED,
-            ]));
-            if (empty($events)) {
-                continue;
-            }
-
-            $endpoints[] = [
-                'url' => (string) $endpoint['url'],
-                'secret' => (string) ($endpoint['secret'] ?? ''),
-                'events' => $events,
-            ];
-        }
-
-        return $endpoints;
-    }
-
-    protected function payload($event, $object, $contextId)
+    /**
+     * The JSON document sent for an event.
+     */
+    protected function payload(string $event, $object, int $contextId): array
     {
         $request = Application::get()->getRequest();
 
         return [
             'event' => $event,
             'occurredAt' => gmdate('c'),
-            'contextId' => $contextId ?: null,
-            'baseUrl' => $request ? $request->getBaseUrl() : null,
-            'object' => $this->objectPayload($object),
+            'contextId' => $contextId,
+            'baseUrl' => $request->getBaseUrl(),
+            'object' => [
+                'id' => $object->getId(),
+                'class' => get_class($object),
+                'submissionId' => $object instanceof Publication ? (int) $object->getData('submissionId') : null,
+                'contextId' => $contextId,
+                'data' => $object->getAllData(),
+            ],
         ];
     }
 
-    protected function objectPayload($object)
+    protected function userAgent(): string
     {
-        $data = method_exists($object, 'getAllData') ? $object->getAllData() : [];
+        $version = $this->getCurrentVersion();
 
-        return [
-            'id' => method_exists($object, 'getId') ? $object->getId() : null,
-            'class' => get_class($object),
-            'submissionId' => method_exists($object, 'getData') ? ($object->getData('submissionId') ?: $object->getData('submission_id')) : null,
-            'contextId' => $this->resolveContextId($object) ?: null,
-            'data' => $data,
-        ];
+        return 'OJSBR-Webhook/' . ($version ? $version->getVersionString() : '1');
     }
 
-    protected function resolveContextId($object)
+    protected static function encode(array $payload): ?string
     {
-        if (!is_object($object) || !method_exists($object, 'getData')) {
-            return 0;
-        }
+        $body = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE);
 
-        $contextId = (int) ($object->getData('contextId') ?: $object->getData('journalId') ?: 0);
-        if ($contextId > 0) {
-            return $contextId;
-        }
-
-        if ($this->isPublication($object)) {
-            $submissionId = (int) ($object->getData('submissionId') ?: $object->getData('submission_id') ?: 0);
-            if ($submissionId > 0) {
-                $submission = Repo::submission()->get($submissionId);
-                if ($submission) {
-                    return (int) ($submission->getData('contextId') ?: 0);
-                }
-            }
-        }
-
-        $request = Application::get()->getRequest();
-        if ($request && $request->getContext()) {
-            return (int) $request->getContext()->getId();
-        }
-
-        return 0;
+        return $body === false ? null : $body;
     }
+}
 
-    protected function isSubmission($object)
-    {
-        return is_object($object) && (
-            is_a($object, '\APP\submission\Submission')
-            || is_a($object, '\PKP\submission\PKPSubmission')
-            || str_ends_with(get_class($object), '\Submission')
-        );
-    }
-
-    protected function isPublication($object)
-    {
-        return is_object($object) && (
-            is_a($object, '\APP\publication\Publication')
-            || is_a($object, '\PKP\publication\PKPPublication')
-            || str_ends_with(get_class($object), '\Publication')
-        );
-    }
-
-    protected function isPublishedPublication($publication)
-    {
-        return $this->isPublication($publication)
-            && method_exists($publication, 'getData')
-            && (int) $publication->getData('status') === Submission::STATUS_PUBLISHED;
-    }
-
-    protected function firstMatchingObject($args, $method)
-    {
-        foreach ((array) $args as $arg) {
-            if (is_object($arg) && $this->{$method}($arg)) {
-                return $arg;
-            }
-
-            if (is_array($arg)) {
-                $found = $this->firstMatchingObject($arg, $method);
-                if ($found) {
-                    return $found;
-                }
-            }
-        }
-
-        return null;
-    }
+if (!PKP_STRICT_MODE) {
+    class_alias('\APP\plugins\generic\ojsbrWebhook\OjsbrWebhookPlugin', '\OjsbrWebhookPlugin');
 }

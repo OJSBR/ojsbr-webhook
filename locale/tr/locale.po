@@ -49,10 +49,6 @@ msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
 msgstr "Uç nokta ekle"
 
 #, fuzzy
-msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Ayarlar kaydedildi."
-
-#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
 msgstr "Gönderilen örnek veri"
 

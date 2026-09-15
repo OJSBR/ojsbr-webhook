@@ -49,10 +49,6 @@ msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
 msgstr "Thêm điểm cuối"
 
 #, fuzzy
-msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Đã lưu thiết lập."
-
-#, fuzzy
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
 msgstr "Ví dụ dữ liệu được gửi"
 

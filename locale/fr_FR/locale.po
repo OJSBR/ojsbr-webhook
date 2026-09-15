@@ -38,9 +38,6 @@ msgstr "Article publié"
 msgid "plugins.generic.ojsbrWebhook.settings.addEndpoint"
 msgstr "Ajouter un point de terminaison"
 
-msgid "plugins.generic.ojsbrWebhook.settings.saved"
-msgstr "Paramètres enregistrés."
-
 msgid "plugins.generic.ojsbrWebhook.settings.payloadExample"
 msgstr "Exemple de charge utile envoyée"
 

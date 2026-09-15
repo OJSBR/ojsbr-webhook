@@ -15,16 +15,18 @@
 
 namespace APP\plugins\generic\ojsbrWebhook\tests;
 
+use PKP\tests\PKPTestCase;
 use ReflectionClass;
 use ReflectionNamedType;
 
-class PluginTest extends TestCase
+class PluginTest extends PKPTestCase
 {
     /** @return string[] */
     protected function classes(): array
     {
         return [
             \APP\plugins\generic\ojsbrWebhook\OjsbrWebhookPlugin::class,
+            \APP\plugins\generic\ojsbrWebhook\OjsbrWebhookSettingsForm::class,
         ];
     }
 
@@ -50,12 +52,29 @@ class PluginTest extends TestCase
                     continue;
                 }
                 $type = $method->getReturnType();
+                $covariant = $type instanceof ReflectionNamedType && $parentType instanceof ReflectionNamedType
+                    && !$type->isBuiltin() && !$parentType->isBuiltin() && is_a($type->getName(), $parentType->getName(), true);
                 $this->assertTrue(
-                    $type !== null && ((string) $type === (string) $parentType || ($type instanceof ReflectionNamedType && '?' . $type->getName() === (string) $parentType)),
+                    $type !== null && ((string) $type === (string) $parentType || $covariant || ($type instanceof ReflectionNamedType && '?' . $type->getName() === (string) $parentType)),
                     sprintf('%s::%s() must declare a return type compatible with %s.', $reflection->getShortName(), $method->getName(), $parentType)
                 );
             }
         }
+    }
+
+    public function testTheRegistryFindsThePlugin(): void
+    {
+        // PKP looks for APP\plugins\<category>\<dir>\<Dir>Plugin first and only then for index.php:
+        // a main class named otherwise without index.php is never loaded, and nothing is logged.
+        $root = dirname(__DIR__);
+        $product = basename($root);
+        $category = basename(dirname($root));
+        if (is_file($root . '/index.php')) {
+            $this->assertStringContainsString('return new ', (string) file_get_contents($root . '/index.php'));
+            return;
+        }
+        $class = implode(chr(92), ['APP', 'plugins', $category, $product, ucfirst($product) . 'Plugin']);
+        $this->assertTrue(class_exists($class), "Without index.php the main class must be {$class}.");
     }
 
     public function testNoInheritedPropertyIsRedeclaredWithAType(): void

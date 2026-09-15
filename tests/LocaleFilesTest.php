@@ -14,7 +14,9 @@
 
 namespace APP\plugins\generic\ojsbrWebhook\tests;
 
-class LocaleFilesTest extends TestCase
+use PKP\tests\PKPTestCase;
+
+class LocaleFilesTest extends PKPTestCase
 {
     /** Locale codes shipped by the plugin, as OJS 3.4 names them. */
     public const LOCALES = [
@@ -69,7 +71,7 @@ class LocaleFilesTest extends TestCase
     {
         $files = $this->files();
         $master = array_keys($files[self::MASTER]->entries);
-        $this->assertCount(22, $master);
+        $this->assertCount(21, $master);
 
         foreach ($files as $locale => $file) {
             $this->assertSame($master, array_keys($file->entries), "Keys of {$locale} differ from " . self::MASTER . '.');
@@ -114,10 +116,16 @@ class LocaleFilesTest extends TestCase
         }
     }
 
+    /** Translations from the original authors keep the headers they were published with. */
+    public const UPSTREAM_HEADERS = [];
+
     public function testHeaderDeclaresTheLocaleAndTheTeam(): void
     {
         foreach ($this->files() as $locale => $file) {
             $this->assertStringContainsString("Language: {$locale}\n", $file->header, "Wrong Language header in {$locale}.");
+            if (in_array($locale, self::UPSTREAM_HEADERS, true)) {
+                continue;
+            }
             $this->assertStringContainsString("Last-Translator: OJSBR\n", $file->header, "Missing Last-Translator in {$locale}.");
             $this->assertStringContainsString("Language-Team: OJSBR\n", $file->header, "Missing Language-Team in {$locale}.");
         }
