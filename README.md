@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/badge/version-1.1.0.0-blue)](version.xml)
 [![License](https://img.shields.io/badge/license-GPL--3.0-lightgrey)](LICENSE)
 
-**⬇️ Install package:** [OJS 3.4](https://github.com/OJSBR/ojsbr-webhook/releases/download/1.1.0.0/ojsbrWebhook-1.1.0.0.tar.gz) — or browse all [Releases](../../releases).
+**⬇️ Install package:** [OJS 3.4](https://github.com/OJSBR/ojsbrWebhook/releases/download/1.1.0.0/ojsbrWebhook-1.1.0.0.tar.gz) — or browse all [Releases](../../releases).
 
 A generic plugin for **Open Journal Systems (OJS)** that sends an HTTP webhook when a
 submission is created and when an article is actually published, so that other systems
@@ -58,7 +58,7 @@ is published.
 2. Enable **OJSBR Webhook** in the *Generic* plugins list.
 
 The package is also published to GitHub Packages on every push to a stable branch
-(`ghcr.io/ojsbr/ojsbr-webhook:3.4.latest`, pulled with [ORAS](https://oras.land)).
+(`ghcr.io/ojsbr/ojsbrwebhook:3.4.latest`, pulled with [ORAS](https://oras.land)).
 
 ## Configuration
 
@@ -196,7 +196,7 @@ agendado numa edição futura só fica público quando a edição é publicada.
 Instale em **Configurações → Website → Plugins → Enviar um novo plugin**, ou extraia a pasta em
 `plugins/generic/` (ficando `plugins/generic/ojsbrWebhook/`). Não renomeie a pasta. Depois ative
 o **OJSBR Webhook** na lista de plugins *Genéricos*. O pacote também sai no GitHub Packages
-(`ghcr.io/ojsbr/ojsbr-webhook:3.4.latest`).
+(`ghcr.io/ojsbr/ojsbrwebhook:3.4.latest`).
 
 ### Configuração
 

@@ -64,7 +64,7 @@ jobs:
 
       - name: Publish package to GitHub Packages
         env:
-          IMAGE: ghcr.io/${{ steps.version.outputs.owner_lc }}/ojsbr-webhook
+          IMAGE: ghcr.io/${{ steps.version.outputs.owner_lc }}/ojsbrwebhook
           REPO_URL: https://github.com/${{ github.repository }}
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io \
@@ -86,7 +86,7 @@ jobs:
         run: |
           gh api \
             --method PUT \
-            "/orgs/${{ github.repository_owner }}/packages/container/ojsbr-webhook/visibility" \
+            "/orgs/${{ github.repository_owner }}/packages/container/ojsbrwebhook/visibility" \
             -f visibility=public
 
       - name: Publish public GitHub Release
@@ -117,6 +117,6 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ojsbr-webhook-${{ steps.version.outputs.package_tag }}
+          name: ojsbrWebhook-${{ steps.version.outputs.package_tag }}
           path: dist/*.tar.gz
           retention-days: 90
