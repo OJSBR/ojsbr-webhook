@@ -170,6 +170,69 @@ describe('OJSBR Webhook plugin', function() {
 		});
 	});
 
+
+	// A delivery that is really received. The receiver is a small server of the
+	// plugin's own (tests/receiver.js), started by the script the continuous
+	// integration calls; where it is not running, the test says so instead of
+	// passing for nothing. What is checked is what arrived: the event, the body,
+	// and the signature, recomputed here from the secret the journal saved.
+	it('Delivers a signed payload that a receiver really gets', function() {
+		const receiver = Cypress.env('receiverUrl') || 'http://127.0.0.1:3399';
+		const secret = 'ojsbr-cypress-secret';
+
+		cy.request({url: receiver + '/events', failOnStatusCode: false, timeout: 10000}).then((alive) => {
+			expect(alive.status, 'the receiver of the tests has to be running at ' + receiver
+				+ ' (node plugins/generic/ojsbrWebhook/tests/receiver.js)').to.eq(200);
+
+			return cy.request({method: 'DELETE', url: receiver + '/events', failOnStatusCode: false});
+		});
+
+		login(adminUser, adminPassword);
+		openPluginsTab();
+		openPluginSettings(row, form);
+		urlInputs().then(($inputs) => {
+			if (originalEndpoints === null) {
+				originalEndpoints = $inputs.toArray().map((input) => input.value).filter((value) => value !== '');
+			}
+		});
+
+		// The endpoint of the receiver, with a secret of its own.
+		urlInputs().last().invoke('val', receiver + '/hook');
+		urlInputs().filter((index, input) => input.value === receiver + '/hook').closest('tr').as('receiverRow');
+		cy.get('@receiverRow').find('input[name^="endpointSecret"]').invoke('val', secret);
+		cy.get('@receiverRow').find('.ojsbrWebhookTestEndpoint').click();
+
+		// The journal says the endpoint answered.
+		cy.get('@receiverRow').find('.ojsbrWebhookTestResult', {timeout: 30000})
+			.invoke('text').should('match', /\b200\b/);
+
+		// And the receiver has it, signed with that secret.
+		cy.request({url: receiver + '/events', timeout: 10000}).then((response) => {
+			const events = typeof response.body === 'string' ? JSON.parse(response.body) : response.body;
+			expect(events, 'nothing reached the receiver').to.not.be.empty;
+			const delivery = events[0];
+			expect(delivery.contentType, 'the delivery is json').to.contain('application/json');
+			expect(delivery.event, 'the delivery names the event').to.match(/\S/);
+			expect(delivery.signature, 'the delivery is signed').to.match(/^sha256=[0-9a-f]{64}$/);
+			expect(JSON.parse(delivery.body), 'the body is the payload of an event').to.be.an('object');
+
+			return cy.window({log: false}).then((win) => cy.wrap(
+				(async () => {
+					const encoder = new win.TextEncoder();
+					const key = await win.crypto.subtle.importKey(
+						'raw', encoder.encode(secret), {name: 'HMAC', hash: 'SHA-256'}, false, ['sign']
+					);
+					const mac = await win.crypto.subtle.sign('HMAC', key, encoder.encode(delivery.body));
+
+					return 'sha256=' + [...new Uint8Array(mac)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+				})(),
+				{log: false}
+			)).then((expected) => {
+				expect(delivery.signature, 'the signature is the one the secret of the journal makes').to.eq(expected);
+			});
+		});
+	});
+
 	// Puts the endpoints of the journal back as they were, also when a test failed.
 	after(function() {
 		if (originalEndpoints === null) {
