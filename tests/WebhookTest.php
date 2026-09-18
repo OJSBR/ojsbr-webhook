@@ -28,6 +28,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request as PsrRequest;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Bus;
+use PKP\core\PKPRequest;
 use PKP\core\Registry;
 use PKP\form\validation\FormValidatorCSRF;
 use PKP\form\validation\FormValidatorPost;
@@ -80,6 +81,43 @@ class WebhookTest extends PKPTestCase
         $this->assertSame('submission.created', $request->getHeaderLine('X-OJSBR-Webhook-Event'));
         $this->assertSame('application/json', $request->getHeaderLine('Content-Type'));
         $this->assertFalse($this->sent[0]['options']['allow_redirects']);
+    }
+
+    /**
+     * A entrega é feita pelo worker da fila, e lá a requisição não tem router.
+     * Montar o cliente HTTP da aplicação lê a versão instalada, que lê o contexto
+     * pelo router: sem ele, o job morria com "Call to a member function
+     * getContext() on null" e a carga nunca saía — sem erro visível para a
+     * revista, só um job falhado.
+     *
+     * Aqui não há cliente simulado de propósito: o que se quer é justamente o
+     * caminho que monta um cliente de verdade. O destino não escuta, então a
+     * entrega falha por conexão — o que importa é que ela devolve um resultado
+     * em vez de derrubar o processo.
+     */
+    public function testADeliveryIsAttemptedWhenTheRequestHasNoRouter(): void
+    {
+        // O registro é de toda a suíte: o que for trocado aqui volta no fim,
+        // senão os testes seguintes herdam uma requisição sem router.
+        $clienteAnterior = Registry::get(PKPTestCase::MOCKED_GUZZLE_CLIENT_NAME);
+        $requisicaoAnterior = Registry::get('request');
+
+        try {
+            $semCliente = null;
+            Registry::set(PKPTestCase::MOCKED_GUZZLE_CLIENT_NAME, $semCliente);
+            $requisicao = new PKPRequest();
+            Registry::set('request', $requisicao);
+            $this->assertNull($requisicao->getRouter(), 'a requisição do teste não tem router');
+
+            $resultado = WebhookSender::send('http://127.0.0.1:9/ojsbr-webhook-test', '', 'test.event', '{}', 'OJSBR-test/1.0');
+
+            $this->assertIsArray($resultado, 'a entrega devolveu um resultado em vez de derrubar o processo');
+            $this->assertFalse($resultado['ok'], 'nada escuta na porta 9');
+            $this->assertSame(0, $resultado['statusCode']);
+        } finally {
+            Registry::set(PKPTestCase::MOCKED_GUZZLE_CLIENT_NAME, $clienteAnterior);
+            Registry::set('request', $requisicaoAnterior);
+        }
     }
 
     public function testWithoutASecretNothingIsSigned(): void

@@ -14,7 +14,10 @@
 namespace APP\plugins\generic\ojsbrWebhook;
 
 use APP\core\Application;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use PKP\config\Config;
+use Throwable;
 
 class WebhookSender
 {
@@ -61,6 +64,32 @@ class WebhookSender
     }
 
     /**
+     * The client used for the delivery.
+     *
+     * The client of the application is asked for first, because the tests put a
+     * mocked one in its place and a journal may have a proxy configured. But
+     * building it reads the installed version of the application, and that reads
+     * the context of the request: inside a queue worker there is no request, and
+     * it dies with "Call to a member function getContext() on null" — which is
+     * where deliveries are actually made. So a failure there falls back to a
+     * client built here, with the same proxy of the configuration. The delivery
+     * carries its own User-Agent either way.
+     */
+    private static function httpClient(): Client
+    {
+        try {
+            return Application::get()->getHttpClient();
+        } catch (Throwable $error) {
+            return new Client([
+                'proxy' => [
+                    'http' => Config::getVar('proxy', 'http_proxy', null),
+                    'https' => Config::getVar('proxy', 'https_proxy', null),
+                ],
+            ]);
+        }
+    }
+
+    /**
      * Posts the body to the endpoint. The HTTP client of the application carries the proxy of
      * the configuration; redirects are not followed.
      *
@@ -73,7 +102,7 @@ class WebhookSender
         }
 
         try {
-            $response = Application::get()->getHttpClient()->request('POST', trim($url), [
+            $response = self::httpClient()->request('POST', trim($url), [
                 'headers' => self::headers($secret, $event, $body, $userAgent),
                 'body' => $body,
                 'allow_redirects' => false,
